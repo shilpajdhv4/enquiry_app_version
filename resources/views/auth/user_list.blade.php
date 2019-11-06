@@ -20,7 +20,7 @@
   <section class="content">
    <div class="box">
             <div class="box-header">
-              <h3 class="box-title">EMPLOYEE LIST</h3><a href="{{url('register')}}" class="panel-title" style="margin-left: 70%;color: #dc3d59;"><span class="fa fa-plus-square"></span> Add New Employee</a>
+              <a href="{{url('register')}}" class="panel-title" style="color: #dc3d59;"><span class="fa fa-plus-square"></span> Add New Employee</a>
             </div>
             <!-- /.box-header -->
              <?php $x = 1; ?>
@@ -32,7 +32,8 @@
                   <th>Name</th>
                   <th>Email</th>
                   <th>Mobile No.</th>
-                  <th>Address</th>
+                  <th>Location</th>
+                  <!--<th>Location</th.>-->
                   <th>Action</th>
                 </tr>
                 </thead>
@@ -45,7 +46,7 @@
                                         <td>{{$u->name}}</td>
                                         <td>{{$u->email}}</td>
                                         <td>{{$u->mobile_no}}</td>
-                                        <td>{{$u->address}}</td>
+                                        <td>{{$u->loc_name}}</td>
                                         <td>
                                             <a href="{{ url('edit-user?id='.$u->id)}}"><span class="fa fa-edit"></span></a>
                                             <a href="{{ url('delete-user')}}/{{$u->id}}" style="color:red" class="delete"><span class="fa fa-trash"></span></a>

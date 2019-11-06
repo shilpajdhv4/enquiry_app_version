@@ -1,24 +1,33 @@
 @extends('layouts.app')
 @section('title', 'Add Owner')
 @section('content')
+<meta name="viewport" content="width=device-width, initial-scale=1">
 <style>
-    @media screen and (max-device-width:640px), screen and (max-width:640px) {
-    .mobile_date {
-    Width: 60px;
+@media only screen and (max-width: 600px) {
+    .datepicker {
+        width: 100px;
+        /*height:100px;*/
     }
 }
 </style>
 <?php 
-$logeed_id = Auth::user()->id;
-$role = Auth::user()->role; ?>
+if(Auth::guard('admin')->check()){
+    $setting =array();
+    if(isset(Auth::guard('admin')->user()->enq_setting)){
+        $setting = json_decode(Auth::guard('admin')->user()->enq_setting,true);
+    }
+}else if(Auth::guard('employee')->check()){
+        $id = Auth::guard('employee')->user()->cid;
+        $client = \App\Admin::select('enq_setting')->where(['rid'=>$id])->first();
+        $setting =array();
+        if(isset(Auth::guard('admin')->user()->enq_setting)){
+            $setting = json_decode(Auth::guard('admin')->user()->enq_setting,true);
+        }
+} ?>
 <section class="content-header">
     <h1>
         Add New Enquiry
     </h1>
-    <ol class="breadcrumb">
-        <li><a href="{{url('home')}}"><i class="fa fa-dashboard"></i> Enquiry</a></li>
-        <li class="active">Add Enquiry</li>
-    </ol>
 </section>
 @if (Session::has('alert-success'))
 <div class="alert alert-success alert-block"> <a class="close" data-dismiss="alert" href="#">×</a>
@@ -38,125 +47,52 @@ $role = Auth::user()->role; ?>
                     <div class="box-body">
                         <input type="hidden" name="en_id" id="en_id" value="" />
                         <div class="form-group">
-                            <label for="userName" class="col-sm-2 control-label">Enquiry No</label>
-                            <div class="col-sm-4">
-                                <input type="text" class="form-control" id="enquiry_no" placeholder="Enquiry No" value="<?php if(isset($last_entry->enquiry_no)) echo (++$last_entry->enquiry_no); else echo "E-".$logeed_id."- 1"; ?>" name="enquiry_no" readonly >
+                            <label for="userName" class="col-sm-3 control-label">Select Enquiry Template<span style="color:red"> * </span></label>
+                            <div class="radio col-sm-9">
+                                <?php $l = 0; ?>
+                            @foreach($enq_template as $temp)
+                            <label>
+                                  <input type="radio" name="enq_template_id" id="optionsRadios2 enq_template_id" value="{{$temp->enq_temp_id}}" <?php if($l == 0) echo "checked"; ?>>{{$temp->temp_name}}
+                            </label>
+                            <?php $l++; ?>
+                            @endforeach
                             </div>
+                        </div>
+                        <div class="form-group">
+                            <?php if(!in_array(2, $setting)) { ?>
                             <label for="userName" class="col-sm-2 control-label">Mobile No<span style="color:red"> * </span></label>
                             <div class="col-sm-4">
-                                <input type="text" class="form-control" onkeypress="return phoneno(event)" id="mobile_no" onkeyup="check();"  placeholder="Mobile No" value="" name="mobile_no"  required >
+                                <input type="text" class="form-control" onkeypress="return phoneno(event)" id="enq_mobile_no" onkeyup="check();"  placeholder="Mobile No" value="" name="enq_mobile_no"  required >
                             </div>
-                        </div>
-                        <div class="form-group">
+                            <?php } if(!in_array(4, $setting)) { ?>
                             <label for="company" class="col-sm-2 control-label">Customer Name <span style="color:red"> * </span></label>
                             <div class="col-sm-4">
-                                <input type="text" class="form-control" id="customer_name" placeholder="Customer Name" value="" name="customer_name"  required>
+                                <input type="text" class="form-control" id="enq_name" placeholder="Customer Name" value="" name="enq_name"  required>
                             </div>
-                            <label for="company" class="col-sm-2 control-label">Email</label>
-                            <div class="col-sm-4">
-                                <input type="text" class="form-control" id="email" placeholder="Email" value="" name="email"  >
-                            </div>
-                            <span id="message"></span>
-                        </div>
-                        <div class="form-group">
-                            <label for="company" class="col-sm-2 control-label">Address</label>
-                            <div class="col-sm-4">
-                                <input type="text" class="form-control" id="address" placeholder="Address" value="" name="address"  >
-                            </div>
-                            <label for="company" class="col-sm-2 control-label">City</label>
-                            <div class="col-sm-4">
-                                <!--<input type="text" class="form-control" id="user" placeholder="City" value="" name="city_id"  >-->
-                                <select class="form-control select2" style="width: 100%;" name="city_id" id="city_id">
-                                    <option value="">-- Select City -- </option>
-                                    @foreach($city as $c)
-                                    <option value="{{$c->city_name}}">{{$c->city_name}}</option>
-                                    @endforeach
-                                </select>
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label for="userName" class="col-sm-2 control-label">Product Name</label>
-                            <div class="<?php if($role == 1){ ?>col-sm-3 <?php }else{ ?>col-sm-4<?php } ?>">
-                                <select class="form-control " style="width: 100%;" name="product_id" id="product_id">
-                                    <option value="">-- Select Product -- </option>
-                                    @foreach($product_data as $prod)
-                                    <option value="{{$prod->item_id}}">{{$prod->item_name}}</option>
-                                    @endforeach
-                                </select>
-                            </div>
-                            <?php if($role == 1){ ?>
-                            <a href="{{url('add_item')}}" class="col-sm-1" target="_blank">Add</a>
-                            <?php } ?>
-                            <label for="gst" class="col-sm-2 control-label">Enquiry Status</label>
-                            <div class="col-sm-4">
-                                <select class="form-control select2" style="width: 100%;" name="status_id" id="status_id" required>
-                                    <option value="">-- Select Status -- </option>
-                                    @foreach($enquiry_status as $enq)
-                                    <option value="{{$enq->id}}">{{$enq->status_name}}</option>
-                                    @endforeach
-                                </select>
-                            </div>
-                            
-                        </div>
-                        <div class="form-group">   
-                            <label for="gst" class="col-sm-2 control-label">Source</label>
-                            <div class="col-sm-4">
-                                <select class="form-control select2" style="width: 100%;" id="source" name="source" >
-                                    <option value="">-- Select Status -- </option>
-                                    <option value="Other" selected>Other</option>
-                                    @foreach($source as $su)
-                                    <option value="{{$su->name}}">{{$su->name}}</option>
-                                    @endforeach
-                                </select>
-                            </div>
-                            <label for="gst" class="col-sm-2 control-label">Status</label>
-                            <div class="col-sm-4">
-                                <select class="form-control select2" style="width: 100%;" id="active_inactive_status" name="active_inactive_status" >
-                                    @foreach($status as $su)
-                                    <option value="{{$su->id}}">{{$su->status}}</option>
-                                    @endforeach
-                                </select>
-                            </div>
-                            <!--<a href="{{url('add-enquiry-status')}}" class="col-sm-1">Add</a>-->
-                        </div>
-                        <div class="form-group">   
-                            
-                            <?php if($role == 1){ ?>
-                            <label for="gst" class="col-sm-2 control-label">Assign To Employee</label>
-                            <div class="col-sm-3">
-                                <select class="form-control select2" style="width: 100%;" name="assign_to_emp_id" id="assign_to_emp_id" >
-                                    <option value="">-- Select Employee -- </option>
-                                    @foreach($employee_data as $emp)
-                                    <option value="{{$emp->id}}">{{$emp->name}}</option>
-                                    @endforeach
-                                </select>
-                            </div>
-                            <a href="{{url('register')}}" class="col-sm-1" target="_blank">Add</a>
                             <?php } ?>
                         </div>
-                        <div class="form-group" id="source_text" style="display: none;">                  
-                            <label for="gst" class="col-sm-2 control-label"></label>
-                            <div class="col-sm-4"></div>
-                            <label for="gst" class="col-sm-2 control-label"></label>
-                            <div class="col-sm-4">
-                                <input type="text" name="source_val" class="form-control" id="source_val" value="" />
-                            </div>
-                        </div>
+                        <?php if(!in_array(3, $setting)) { ?>
+                        <div id="field_box"></div>
+                        <?php } if(!in_array(1, $setting)) { ?>
+                        <div id="category_box" class="form-group"></div>
+                        
+                        <div id="product_box" class="form-group"></div>
+                        <?php } if(!in_array(6, $setting)) { ?>
                         <div class="form-group">
                             <label for="company" class="col-sm-2 control-label">Follow Up</label>
                         </div>
-                        <table style="margin: 10px 10px 10px 10px;" class="table" >
+                        <table style="margin: 2px 2px 2px 2px;" class="table" >
                             <tbody id="h_lost">                                
                                 <tr class="first">
                                     <td>
-                                        <textarea class="form-control" rows="3" placeholder="Enter Here..." name="follow_up[0][0]" required ></textarea>   
+                                        <textarea class="form-control mobile_date" rows="3" cols="40" placeholder="Enter Here..." name="follow_up[0][0]"  ></textarea>   
                                     </td>
                                     <td>
-                                        <div class="input-group date">
+                                        <div class="input-group date datepicker">
                                             <div class="input-group-addon">
                                               <i class="fa fa-calendar"></i>
                                             </div>
-                                            <input type="text" name="follow_up[0][1]" class="form-control mobile_date datepicker" value="" />
+                                            <input type="text" name="follow_up[0][1]" class="form-control datepicker " value=""  />
                                         </div>
                                     </td>
                                     <td><i class="fa fa-plus-circle btn-success add_field_button"></i></td>
@@ -165,7 +101,7 @@ $role = Auth::user()->role; ?>
                                 
                             </tbody>
                         </table>
-                        </div>
+                        <?php } ?>
                     </div>
                     <div class="box-footer">
                         <button type="submit"  id="btnsubmit" class="btn btn-success">Submit</button>
@@ -183,7 +119,68 @@ $role = Auth::user()->role; ?>
 <script type='text/javascript' src='js/jquery.validate.js'></script>
 <script>
 $(document).ready(function () {
-//    $('.select2').select2();
+    $('.select2').select2();
+    //$('input[name="enq_template_id"]:radio').attr('checked', true).trigger('click');
+    $("#fpago2").attr('checked', true).trigger('click');
+    
+	
+	 $('.datepicker').datepicker({
+            format: "dd-mm-yyyy",
+            autoclose: true,
+            todayHighlight: true
+    })
+	
+    $('input[name="enq_template_id"]:radio').on("click", function(){
+        var trid = $(this).val();
+         $.ajax({
+            url: 'enq_temp_value/'+ trid,
+            type: "GET",
+            success: function(data) {
+                var jsonData = JSON.parse(data);
+                console.log(data);
+                $("#field_box").html(jsonData.field);
+                $("#category_box").html(jsonData.category);
+                $('.select2').select2();
+            }
+        });
+    });  
+      $("input:radio:first").prop("checked", true).trigger("click");
+//    $('input[name="enq_template_id"]:radio').attr('checked', true).trigger('click');
+    $(document).on('change', '#category', function(){
+        var id = $(this).val();
+        $.ajax({
+            url: 'enq_sub_cat/'+ id,
+            type: "GET",
+            success: function(data) {
+                console.log(data);
+                var jsonData = JSON.parse(data);
+                console.log(jsonData);
+                $('select').select2();
+                $("#sub_level_box").html(jsonData.category);
+                $("#product_box").html(jsonData.product);
+                $('.select2').select2();
+            }
+        });
+    }); 
+        
+    $(document).on('change', '#category1', function(){
+        var id = $(this).val();
+        $.ajax({
+            url: 'enq_sub_cat/'+ id,
+            type: "GET",
+            success: function(data) {
+				console.log(data);
+                var jsonData = JSON.parse(data);
+                console.log(jsonData);
+                $('select').select2();
+                $("#sub_level_box").append(jsonData.category);
+                $("#product_box").html(jsonData.product);
+                $('.select2').select2();
+            }
+        });
+    });  
+    
+        
     $('div.alert').delay(3000).slideUp(300);
 
     var wrapper = $(".input_fields_wrap"); //Fields wrapper
@@ -191,71 +188,42 @@ $(document).ready(function () {
     var i = 0;
     var x = 1; //initlal text box is_countable
     var s = 14;
-
+    
     $(document).on('click','.add_field_button',function () {
 //        alert();
         x++;
         var date = $("#cop_date").val();
         var message = $('.input_fields_wrap tr').length;
         
-        $("#h_lost").append('<tr class="first"><td><textarea class="form-control" rows="3" placeholder="Enter Here..." name="follow_up['+x+'][0]" required ></textarea></td><td><div class="input-group date"><div class="input-group-addon"><i class="fa fa-calendar"></i></div><input type="text" name="follow_up['+ x +'][1]" id="datepicker"  class="form-control mobile_date datepicker" value="" /></div></td><input type="hidden" class="form-control" name="follow_up['+x+'][2]" value="<?php echo date('Y-m-d h:m:s'); ?>" readonly /><td><i class="fa fa-minus-circle btn-danger remove_field"></i></td></tr>')
-        $('.datepicker').datepicker({
-                format: "yyyy-mm-dd",
+        $("#h_lost").append('<tr class="first"><td><textarea class="form-control mobile_date" rows="3" cols="40" placeholder="Enter Here..." name="follow_up['+x+'][0]" required ></textarea></td><td><div class="input-group date datepicker"><div class="input-group-addon"><i class="fa fa-calendar"></i></div><input type="text" name="follow_up['+ x +'][1]" id="datepicker" class="form-control datepicker" value="" /></div></td><input type="hidden" class="form-control" name="follow_up['+x+'][2]" value="<?php echo date('Y-m-d h:m:s'); ?>" readonly /><td><i class="fa fa-minus-circle btn-danger remove_field"></i></td></tr>')
+       
+//        $('select').select2();
+        $('.datepicker-autoclose').datepicker();  
+        
+         $('.datepicker').datepicker({
+            format: "dd-mm-yyyy",
             autoclose: true,
             todayHighlight: true
     })
-//        $('select').select2();
-        $('.datepicker-autoclose').datepicker();        
+        
     });
-    
-    $("#source").on("change",function(){
-        var a = $(this).val();
-        if(a == "Event" || a == "Reference") {
-            $("#source_text").css("display","block");
-        }
-    })
-    
-     $("#h_lost").on('click', '.remove_field', function () {
+       
+    $("#h_lost").on('click', '.remove_field', function () {
         $(this).parent().parent().remove();
     });
     
-    $("#mobile_no").focusout(function () {
-        var mobile_no = $(this).val();
-        $.ajax({
-            url: 'mobile-validate/' + mobile_no,
-            type: "GET",
-            success: function (response) {
-//                console.log(response);
-                var data = JSON.parse(response);
-                $("#en_id").val(data.enquiry_id);
-                $("#enquiry_no").val(data.enquiry_no);
-                $("#customer_name").val(data.customer_name);
-                $("#email").val(data.email);
-                $("#address").val(data.address);
-                $("#city_id").val(data.city_id).attr("selected", "selected");
-                $('#city_id').trigger('change.select2');
-                $("#product_id").val(data.product_id).attr("selected", "selected");
-                $('#product_id').trigger('change.select2');
-                $("#status_id").val(data.status_id).attr("selected", "selected");
-                $('#status_id').trigger('change.select2');
-                $("#source").val(data.source).attr("selected", "selected");
-                $('#status_id').trigger('change.select2');
-                var json_data = JSON.parse(data.follow_up);
-                console.log(json_data);
-                $("#h_lost").html("");
-                var x = 1;
-                $.each(json_data, function(index, value){
-//                    if(x == 1){
-                    $("#h_lost").append('<tr class="first"><td><b>FollowUp '+x+'</b></td><td><textarea class="form-control" rows="3" placeholder="Enter Here..." name="follow_up['+x+'][0]" readonly >'+value[0]+'</textarea></td><td><input type="date" name="follow_up['+ x +'][1]" class="form-control" value="'+value[1]+'" readonly /></td><input type="hidden" class="form-control" name="follow_up['+x+'][2]" value="'+value[2]+'" readonly /><td><a href="javascript:void(0)" class="btn btn-success btn-mini add_field_button">Add</a></td></tr>')
-//                    }else{
-//                        $("#h_lost").append('<tr class="first"><td><b>FollowUp '+x+'</b></td><td><textarea class="form-control" rows="3" placeholder="Enter Here..." name="follow_up['+x+'][0]" readonly >'+value[0]+'</textarea></td><td><input type="date" name="follow_up['+ x +'][1]" class="form-control" value="'+value[1]+'" readonly /></td><input type="hidden" class="form-control" name="follow_up['+x+'][2]" value="'+value[2]+'" readonly /></tr>')
-//                    }
-                    x++;
-                });
-                
-            }
-        });
+	
+    $(document).ready(function() {
+        window.history.pushState(null, "", window.location.href);        
+        window.onpopstate = function() {
+            window.history.pushState(null, "", window.location.href);
+        };
     });
+    window.onload = function () {
+        document.onkeydown = function (e) {
+            return (e.which || e.keyCode) != 116;
+        };
+    }
 
 });
 
@@ -264,8 +232,8 @@ var jvalidate = $("#userForm").validate({
             password : {required: true},
         },
          messages: {
-             mobile_no: "Please Enter Mobile No",
-             customer_name: "Please Enter Customer Name"
+             enq_mobile_no: "Please Enter Mobile No",
+             enq_name: "Please Enter Customer Name"
            }  
     });
 
@@ -284,7 +252,7 @@ function isNumber(evt) {
 }
 
 function phoneno(){          
-            $('#mobile_no').keypress(function(e) {
+            $('#enq_mobile_no').keypress(function(e) {
                 var length = jQuery(this).val().length;
        if(length > 11) {
             return false;

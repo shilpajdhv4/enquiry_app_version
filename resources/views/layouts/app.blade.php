@@ -22,6 +22,7 @@
   <link rel="stylesheet" href="bower_components/bootstrap-datepicker/dist/css/bootstrap-datepicker.min.css">
   <!-- iCheck for checkboxes and radio inputs -->
   <link rel="stylesheet" href="plugins/iCheck/all.css">
+    <link rel="stylesheet" href="plugins/iCheck/square/blue.css">
   <!-- Bootstrap Color Picker -->
   <link rel="stylesheet" href="bower_components/bootstrap-colorpicker/dist/css/bootstrap-colorpicker.min.css">
   <!-- Bootstrap time Picker -->
@@ -48,6 +49,7 @@
 
   <!-- Google Font -->
   <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700,300italic,400italic,600italic">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
 </head>
 <style>
     .error{
@@ -96,6 +98,11 @@
 </body>
 <script>
      $(document).ready(function() {
+         $('input[type="checkbox"].minimal-blue, input[type="radio"].minimal-blue').iCheck({
+      checkboxClass: 'icheckbox_minimal-blue',
+      radioClass   : 'iradio_minimal-blue'
+    })
+         
             $('div.alert').delay(3000).slideUp(300);
             $('.datepicker').datepicker({
                 format: "yyyy-mm-dd",

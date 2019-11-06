@@ -13,19 +13,69 @@
 
 Route::view('/', 'welcome');
 Auth::routes();
+
+//Route::get('/home', 'HomeController@index');
+
+
+Route::get('client-register','Auth\ClientController@showRegform');
+Route::post('client-register','Auth\ClientController@create');
+
+Route::get('admin-login', 'Auth\AdminController@showLoginForm');
+Route::post('admin-login', ['as'=>'admin-login','uses'=>'Auth\AdminController@login']);
+Route::post('/admin-logout', 'Auth\AdminController@logout');//->name('admin.logout');
+
+
 Route::get('/','Auth\LoginController@showLoginForm');
-Route::get('/login/{social}','Auth\LoginController@socialLogin')->where('social','twitter|facebook|linkedin|google|github|bitbucket');
-Route::get('/login/{social}/callback','Auth\LoginController@handleGoogleCallback')->where('social','twitter|facebook|linkedin|google|github|bitbucket');
+
+Route::get('home-admin','HomeController@indexAdmin')->name('admin');
+//Employee login
+Route::get('employee-login','Auth\EmployeeController@showLoginForm');
+Route::post('employee-login','Auth\EmployeeController@login');
+Route::get('employee-home','HomeController@empIndex');
+Route::post('/employee-logout', 'Auth\EmployeeController@logout');
+
 //User List
+Route::get('register','UserController@addEmployee');
 Route::post('register','UserController@saveUser');
 Route::get('user-list','UserController@userList');
 Route::get('edit-user','UserController@userEdit');
 Route::put('update-user/{id}','UserController@updateUser');
 Route::get('delete-user/{id}','UserController@deletUser');
 
-Route::get('/home', 'HomeController@index');
+Route::get('/home', 'ClientController@indexHome');
+Route::get('dashboard_enq_list','HomeController@dashboard_enq_list');
 //Route::post('/login' , 'Auth\AuthController@authenticate');
+//
+
 //Enquiry
+Route::get('enq_field','EnquiryFieldController@getField');
+Route::post('enq_field','EnquiryFieldController@postField');
+
+//Category
+Route::get('enq_category','EnquiryFieldController@getCategoryList');
+Route::get('add_enq_category','EnquiryFieldController@getDropdown');
+Route::post('add_enq_category','EnquiryFieldController@saveCategory');
+Route::get('edit_enq_category','EnquiryFieldController@editCategory');
+Route::post('update_enq_category','EnquiryFieldController@updateEnqCategory');
+Route::get('delete_enq_category/{id}','EnquiryFieldController@deleteEnqCategory');
+
+//Enquiry template
+Route::get('enq_templates','EnquiryFieldController@getTemplateList');
+Route::get('add_enq_template','EnquiryFieldController@getTemplate');
+Route::post('add_enq_template','EnquiryFieldController@saveTemplate');
+Route::post('update_category','EnquiryFieldController@updateCategory');
+Route::post('update_field','EnquiryFieldController@updateField');
+Route::get('enq_edit','EnquiryFieldController@editEnquiry');
+Route::post('enq_edit','EnquiryFieldController@updateEnquiry');
+Route::get('enq_template_del/{id}','EnquiryFieldController@deleteEnqTep');
+//Route::get('prev_category/{id}','EnquiryFieldController@prevCategory');
+
+//Enquiry Product
+Route::post('product','EnquiryFieldController@saveProduct');
+
+//Enquiry
+Route::get('enq_temp_value/{id}','EnquiryController@getEnqfield');
+Route::get('enq_sub_cat/{id}','EnquiryController@getSubcat');
 Route::get('enquiry-list','EnquiryController@enquiryList');
 Route::get('add-enquiry','EnquiryController@addEnquiry');
 Route::post('add-enquiry','EnquiryController@saveEnquiry');
@@ -34,42 +84,23 @@ Route::put('update-enquiry/{id}','EnquiryController@updateEnquiry');
 Route::get('delete-enquiry/{id}','EnquiryController@deletEnquiry');
 Route::get('mobile-validate/{id}','EnquiryController@validateMobile');
 
+Route::get('product_val/{id}','EnquiryController@getProduct');
 Route::get('get_city/{id}','MasterController@getCity');
-//Enquiry Status
-Route::get('enquiry-status','EnquiryStatusController@statusList');
-Route::get('add-enquiry-status','EnquiryStatusController@addEnquirystatus');
-Route::post('add-enquiry-status','EnquiryStatusController@saveStatus');
-Route::get('edit-enquiry-status','EnquiryStatusController@editStatus');
-Route::put('update-enquiry-status/{id}','EnquiryStatusController@updateStatus');
-Route::get('delete-enquiry-status/{id}','EnquiryStatusController@deleteStatus');
-
-
-//Get masterdata
-Route::get('item_data','MasterController@getItemData');
-Route::get('add_item','MasterController@getItem');
-Route::post('add_item','MasterController@addItem');
-Route::get('edit-item','MasterController@editItem');
-Route::post('edit-item','MasterController@updateItem');
-Route::get('delete-item/{item_id}','MasterController@deleteItem');
-
-
-Route::get('cust_data','MasterController@getCustData');
-Route::get('add_cust','MasterController@getCust');
-Route::post('add_cust','MasterController@addCust');
-Route::get('edit-cust','MasterController@editCust');
-Route::post('edit-cust','MasterController@updateCust');
-Route::get('delete-cust/{cust_id}','MasterController@deleteCust');
-
-//Enquiry Status
-Route::get('active-inactive','ActiveInactiveController@statusList');
-Route::get('add-active-inactive','ActiveInactiveController@addEnquirystatus');
-Route::post('add-active-inactive','ActiveInactiveController@saveStatus');
-Route::get('edit-active-inactive','ActiveInactiveController@editStatus');
-Route::put('update-active-inactive/{id}','ActiveInactiveController@updateStatus');
-Route::get('delete-active-inactive/{id}','ActiveInactiveController@deleteStatus');
-
 Route::get('email-validate/{id}','UserController@validateEmail');
-Route::get('dashboard_enq_list','MasterController@dashboard_enq_list');
+Route::get('mobile-validate/{id}','UserController@validateMobile');
+Route::get('employee-mobile/{id}','UserController@validateEmployeeMobile');
 
+//Add Location
+Route::get('enq_location_list','EnquiryLocationController@listLocation');
+Route::get('enq_location_add','EnquiryLocationController@addLocation');
+Route::post('enq_location_save','EnquiryLocationController@saveLocation');
+Route::get('enq-location-edit','EnquiryLocationController@editLocation');
+Route::post('enq_location_update','EnquiryLocationController@updateLocation');
+Route::get('enq-location-delete/{id}','EnquiryLocationController@deleteLocation');
 
+Route::get('enq-setting','EnquiryFieldController@getSetting');
+Route::post('enq-setting','EnquiryFieldController@saveSetting');
 
+//client data
+Route::get('client_data','ClientController@getClientData');
+Route::get('active_link/{id}/{val}','ClientController@getActivate');

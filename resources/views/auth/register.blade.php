@@ -6,6 +6,20 @@
         color:red;
     }
 </style>
+<?php 
+if(Auth::guard('employee')->check()){
+   $cid = Auth::guard('employee')->user()->cid;
+   $client_loc = App\Admin::select('location')->where(['rid'=>$cid])->first();
+   $location = $client_loc->location;
+   $logeed_id = Auth::guard('employee')->user()->id; 
+   $role = Auth::guard('employee')->user()->role;
+}else if(Auth::guard('admin')->check()){
+   $logeed_id = Auth::guard('admin')->user()->rid; 
+   $location = Auth::guard('admin')->user()->location; 
+}else if(Auth::guard('web')->check()){
+   $logeed_id = Auth::guard('web')->user()->id; 
+}
+?>
 <section class="content-header">
     <h1>
         Employee Register
@@ -23,7 +37,7 @@
                 <div class="box-header">
                     <h3 class="box-title"></h3>
                 </div>
-                <form class="form-horizontal" id="register_form" method="POST" action="{{ route('register') }}" aria-label="{{ __('Register') }}">
+                <form class="form-horizontal" id="register_form" method="POST" action="{{ url('register') }}" aria-label="{{ __('Register') }}">
                     {{ csrf_field() }}
                     <div class="box-body">
                         <div class="form-group">
@@ -36,8 +50,11 @@
                         <label for="company" class="col-sm-4 control-label">Role</label>
                             <div class="col-sm-8">
                                 <select class="form-control select2" style="width: 100%;" name="role" required>
-                                    <option value="">-- Select Role -- </option>
-                                    <option value="1">Admin</option>
+                                    <!--<option value="">-- Select Role -- </option>-->
+                                    <?php // if($location == "multiple") { 
+//                                        if(Auth::guard('admin')->check()){ ?>
+                                            <!--<option value="1">Admin</option>-->
+                                    <?php // } }?>
                                     <option value="2">Employee</option>
                                 </select>
                             </div>
@@ -45,8 +62,18 @@
                         <div class="form-group">
                             <label for="company" class="col-sm-4 control-label">Email</label>
                             <div class="col-sm-8">
-                                <input type="email" class="form-control" id="email" placeholder="Email" value="" name="email" required >
+                                <input type="email" class="form-control" id="email" placeholder="Email" value="" name="email"  >
                             </div>
+<!--                            <code id="email_validate"></code>-->
+                        </div>
+                        <div class="form-group">
+                            <label for="company" class="col-sm-4 control-label">Mobile No</label>
+                            <div class="col-sm-8">
+                                <input type="text" class="form-control" onkeypress="return phoneno(event)" id="mobile_no" placeholder="Mobile No" value="" name="mobile_no" required >
+                            </div>
+                        </div>
+                        <div class="form-group"  style="color:red;">
+                            <label for="company" class="col-sm-4 control-label"></label>
                             <code id="email_validate"></code>
                         </div>
                         <div class="form-group">
@@ -60,24 +87,28 @@
                                 </span>
                                 @enderror
                         </div>
-<!--                        <div class="form-group">
-                            <label for="company" class="col-sm-4 control-label">Retype Password</label>
-                            <div class="col-sm-8">
-                                <input type="password" class="form-control" id="password_confirmation" placeholder="Retype password" value="" name="password_confirmation" required >
-                            </div>
-                        </div>-->
-                        <div class="form-group">
-                            <label for="company" class="col-sm-4 control-label">Mobile No</label>
-                            <div class="col-sm-8">
-                                <input type="text" class="form-control" onkeypress="return phoneno(event)" id="mobile_no" placeholder="Mobile No" value="" name="mobile_no" required >
-                            </div>
-                        </div>
+                        
                         <div class="form-group">
                             <label for="company" class="col-sm-4 control-label">Address</label>
                             <div class="col-sm-8">
-                                <input type="text" class="form-control" id="address" placeholder="Address" value="" name="address" required >
+                                <textarea class="form-control" id="address" placeholder="Address" value="" name="address"  ></textarea>
                             </div>
                         </div>
+                        <?php // if($location == "multiple") { 
+//                                        if(Auth::guard('admin')->check()){ ?>
+                                    
+                        <div class="form-group" >
+                        <label for="company" class="col-sm-4 control-label">Location</label>
+                            <div class="col-sm-8">
+                                <select class="form-control select2" style="width: 100%;" name="lid" required>
+                                    <option value="">-- Select Location -- </option>
+                                    @foreach($city as $c)
+                                    <option value="{{$c->loc_id}}">{{$c->loc_name}}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+                        </div>
+                        <?php // } }?>
                     </div>
                     <div class="box-footer">
                         <button type="submit" class="btn btn-success">Submit</button>
@@ -98,11 +129,11 @@
 
             var jvalidate = $("#register_form").validate({
                 rules: {   
-                        email: {required: true},
+                       // email: {required: true},
                         password : {required: true},
                     },
                      messages: {
-                         email: "Please Enter Email Address",
+                      //   email: "Please Enter Email Address",
                          password: "Please Enter Password"
                        }  
                 });
@@ -111,16 +142,16 @@
                     $("#orderForm").valid();
                 });
                 
-                $("#email").focusout(function () {
+                $("#mobile_no").focusout(function () {
                 var email = $(this).val();
                 $.ajax({
-                    url: 'email-validate/' + email,
+                    url: 'employee-mobile/' + email,
                     type: "GET",
                     success: function (data) {
                         console.log(data);
                         $("#email_validate").html(data);
                         if (data != "") {
-                            $("#email").val("");
+                            $("#mobile_no").val("");
                         }
                     }
                 });
@@ -138,7 +169,7 @@
 function phoneno(){          
             $('#mobile_no').keypress(function(e) {
                 var length = jQuery(this).val().length;
-       if(length > 11) {
+       if(length > 9) {
             return false;
        } else if(e.which != 8 && e.which != 0 && (e.which < 48 || e.which > 57)) {
             return false;

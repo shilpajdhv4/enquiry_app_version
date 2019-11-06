@@ -12,12 +12,13 @@ class Enquiry extends Model
      *
      * @var array
      */
-    protected $primaryKey = "enquiry_id";
-    public $table = "tbl_enquiry";
-     public $timestamps=false;
+    protected $primaryKey = "enq_id";
+    public $table = "enq_enquiries";
+   //  public $timestamps=false;
      protected $fillable = [
-        'enquiry_no','mobile_no', 'customer_name', 'email','address','city_id','product_id' ,'assign_to_emp_id' ,'status_id' ,'follow_up' ,'create_at' ,'modify_at','is_active',
-         'source','source_val','followup_date','emp_id','sync_flag','insert_date','active_inactive_status'
+        'enquiry_no','enq_mobile_no', 'enq_name', 'enq_followup_date','enq_template_id','enq_fields','enq_category' ,'enq_product' ,
+		'enq_product_id' ,'enq_user_id','enq_product_name','enq_notes','follow_up' ,'created_at','is_active','insert_date','enq_emp_id','lid'
+		//,'followup_date','emp_id','sync_flag','insert_date','active_inactive_status','cat_id','brand_id','cid','lid','sub_emp_id'
     ];
 
     /**

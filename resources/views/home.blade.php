@@ -5,33 +5,8 @@
     <div class="row justify-content-center">
         <div class="col-md-12">
             <div class="card">
-                <?php
-$color_array=array("bg-aqua","bg-green","bg-yellow","bg-red");
-$a=0;
-$status = App\EnquiryStatus::where(['is_active'=>0])->get();
-?>
-@foreach($status as $row)
-<?php
-$data = \App\Enquiry::where(['status_id'=>$row->id,'active_inactive_status'=>1])->count();
-if($a > 3){$a=0;}?>
-<div class="col-lg-3 col-xs-12">
-          <!-- small box -->
-          <div class="small-box <?php echo $color_array[$a];?>">
-            <div class="inner">
-                <h3 style=" text-align: center;">{{$row->status_name}}</h3>
+             
 
-              <h3 style=" text-align: center;">{{$data}}</h3>
-            </div>
-<!--            <div class="icon">
-              <i class="ion ion-person-add"></i>
-            </div>-->
-            <a href="{{ url('dashboard_enq_list?status_id='.$row->status_id)}}" class="small-box-footer">More info <i class="fa fa-arrow-circle-right"></i></a>
-          </div>
-        </div>
-
-
-<?php $a++;?>
-@endforeach
             </div>
         </div>
     </div>
@@ -58,13 +33,7 @@ if($a > 3){$a=0;}?>
                   </tr>
                   </thead>
                   <tbody>
-                    @foreach($today_en as $e)
-                    <tr>
-                      <td><a href="{{url('edit-enquiry?id='.$e->enquiry_id)}}">{{$e->enquiry_no}}</a></td>
-                      <td>{{$e->customer_name}}</td>
-                      <td>{{$e->mobile_no}}</td>
-                    </tr>  
-                    @endforeach
+                    
                   </tbody>
                 </table>
               </div>

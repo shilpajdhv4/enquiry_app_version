@@ -20,7 +20,7 @@
 <section class="content">
     <div class="box">
         <div class="box-header">
-            <h3 class="box-title">Enquiry List</h3><a href="{{url('add-enquiry')}}" class="panel-title" style="margin-left: 75%;color: #dc3d59;"><span class="fa fa-plus-square"></span> Add New Enquiry</a>
+            <a href="{{url('add-enquiry')}}" class="panel-title" style="color: #dc3d59;"><span class="fa fa-plus-square"></span> Add New Enquiry</a>
         </div>
         <!-- /.box-header -->
         <?php $x = 1; ?>
@@ -29,13 +29,11 @@
                 <thead>
                     <tr>
                         <th>Sr.No</th>
-                        <th>Enquiry No.</th>
                         <th>Date</th>
-                        <th>Product Name</th>
                         <th>Mobile No.</th>
                         <th>Customer Name</th>
-                        <th>Enquiry Status</th>
-                        <th>Employee Name</th>
+                        <th>Follow Up date</th>
+                        <th>Location</th>
                         <th>Action</th>
                     </tr>
                 </thead>
@@ -45,16 +43,14 @@
                     ?>
                     <tr>
                         <td>{{$x++}}</td>
-                        <td>{{$row->enquiry_no}}</td>
                         <td>{{$row->insert_date}}</td>
-                        <td>{{$row->item_name}}</td>
-                        <td>{{$row->mobile_no}}</td>
-                        <td>{{$row->customer_name}}</td>
-                        <td>{{$row->status_name}}</td>
-                        <td>{{$row->name}}</td>
+                        <td>{{$row->enq_mobile_no}}</td>
+                        <td>{{$row->enq_name}}</td>
+                        <td>{{$row->enq_followup_date}}</td>
+                        <td>{{$row->loc_name}}</td>
                         <td>
-                            <a href="{{ url('edit-enquiry?id='.$row->enquiry_id)}}"><span class="fa fa-edit"></span></a>
-                            <a href="{{ url('delete-enquiry')}}/{{$row->enquiry_id}}" style="color:red" class="delete"><span class="fa fa-trash"></span></a>
+                            <a href="{{ url('edit-enquiry?id='.$row->enq_id)}}"><span class="fa fa-edit"></span></a></td>
+                        <td><a href="{{ url('delete-enquiry')}}/{{$row->enq_id}}" style="color:red" class="delete"><span class="fa fa-trash"></span></a>
                         </td>
                     </tr>
                     @endforeach

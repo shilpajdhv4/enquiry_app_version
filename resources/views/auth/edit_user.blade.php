@@ -6,6 +6,20 @@
         color:red;
     }
 </style>
+<?php 
+if(Auth::guard('employee')->check()){
+   $cid = Auth::guard('employee')->user()->cid;
+   $client_loc = App\Admin::select('location')->where(['rid'=>$cid])->first();
+   $location = $client_loc->location;
+   $logeed_id = Auth::guard('employee')->user()->id; 
+   $role = Auth::guard('employee')->user()->role;
+}else if(Auth::guard('admin')->check()){
+   $logeed_id = Auth::guard('admin')->user()->rid; 
+   $location = Auth::guard('admin')->user()->location; 
+}else if(Auth::guard('web')->check()){
+   $logeed_id = Auth::guard('web')->user()->id; 
+}
+?>
 <section class="content-header">
       <h1>
           Edit Employee
@@ -41,7 +55,10 @@
                             <div class="col-sm-8">
                                 <select class="form-control select2" style="width: 100%;" name="role" required>
                                     <option value="">-- Select Role -- </option>
-                                    <option value="1"<?php if($userData->role == "1") echo "selected"; ?>>Admin</option>
+									<?php if($location == "multiple") { 
+                                        if(Auth::guard('admin')->check()){ ?>
+                                            <option value="1"<?php if($userData->role == "1") echo "selected"; ?>>Admin</option>
+                                    <?php } }?>
                                     <option value="2"<?php if($userData->role == "2") echo "selected"; ?>>Employee</option>
                                 </select>
                             </div>
@@ -68,9 +85,24 @@
                         <div class="form-group">
                             <label for="company" class="col-sm-4 control-label">Address</label>
                             <div class="col-sm-8">
-                                <textarea class="form-control" id="address" placeholder="Address" name="address" required >{{$userData->address}}</textarea>
+                                <input type="text" class="form-control" id="address" placeholder="Address" name="address" required value="{{$userData->address}}">
                             </div>
                         </div>
+						<?php // if($location == "multiple") { 
+//                                        if(Auth::guard('admin')->check()){ ?>
+                                    
+                        <div class="form-group" >
+                        <label for="company" class="col-sm-4 control-label">Location</label>
+                            <div class="col-sm-8">
+                                <select class="form-control select2" style="width: 100%;" name="lid" required>
+                                    <option value="">-- Select Location -- </option>
+                                    @foreach($city as $c)
+                                    <option value="{{$c->loc_id}}" <?php if($userData->lid == $c->loc_id) echo "selected"; ?>>{{$c->loc_name}}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+                        </div>
+                        <?php // } }?>
                     </div>
               <div class="box-footer">
                 <button type="submit" class="btn btn-success">Update</button>

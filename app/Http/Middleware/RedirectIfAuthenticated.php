@@ -15,6 +15,9 @@
             if ($guard == "writer" && Auth::guard($guard)->check()) {
                 return redirect('/writer');
             }
+            if ($guard == "dealer" && Auth::guard($guard)->check()) {
+                return redirect('/home');
+            }
             if (Auth::guard($guard)->check()) {
                 return redirect('/home');
             }
