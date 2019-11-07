@@ -82,12 +82,12 @@ Route::post('add-enquiry','EnquiryController@saveEnquiry');
 Route::get('edit-enquiry','EnquiryController@editEnquiry');
 Route::put('update-enquiry/{id}','EnquiryController@updateEnquiry');
 Route::get('delete-enquiry/{id}','EnquiryController@deletEnquiry');
-Route::get('mobile-validate/{id}','EnquiryController@validateMobile');
+//Route::get('mobile-validate/{id}','EnquiryController@validateMobile');
 
 Route::get('product_val/{id}','EnquiryController@getProduct');
 Route::get('get_city/{id}','MasterController@getCity');
-Route::get('email-validate/{id}','UserController@validateEmail');
-Route::get('mobile-validate/{id}','UserController@validateMobile');
+Route::get('email-validate/{id}','AdminValidationController@validateEmail');
+Route::get('mobile-validate/{id}','AdminValidationController@validateMobile');
 Route::get('employee-mobile/{id}','UserController@validateEmployeeMobile');
 
 //Add Location
