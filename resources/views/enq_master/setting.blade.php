@@ -94,7 +94,7 @@
       </div>
 <div class="box-footer">
                         <button type="submit"  id="btnsubmit" class="btn btn-success">Save</button>
-                        <a href="{{url('enq_templates')}}" class="btn btn-danger" >Cancel</a>
+                        <a href="{{url('enq-setting')}}" class="btn btn-danger" >Cancel</a>
                     </div>
       <!-- /.row -->
       </form>

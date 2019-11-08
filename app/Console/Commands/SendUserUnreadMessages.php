@@ -37,33 +37,36 @@ class SendUserUnreadMessages extends Command
      *
      * @return mixed
      */
+//    public function handle()
+//    {
+//        $tokens = 'f3-3moJK64Y:APA91bECQPcYArtET_zlTCDd5SzLmyRsNZPg32Zm6I99iYp6JP2941oqkeFTkED83w_lo9NcU2XBhtN1LrxL4WrGCGuVvOQdGnzmeqznxxbPbmqcleuP7rAPT8d5P8K0zz6h2vjVARtp';
+//        $message = array("message" => "Today You Have a Folloup's");
+//        $this->send_notification($tokens,$message);
+//    }
+//    
+    
     public function handle()
     {
-        $conn = mysqli_connect("localhost","root","","billing_app");
-	$sql = " select token,id from tbl_employees";
-	$result = mysqli_query($conn,$sql);
+     // $conn = mysqli_connect("localhost","ipinguser","iPing@321","enquiry_app");
+     // $sql = "select token,id from tbl_employees";
+        $result = \App\Employee::select('token','id')->get();
+        //$result = mysqli_query($conn,$sql);
         $date = date('Y-m-d');
-	$tokens = array();
-	if(mysqli_num_rows($result) > 0 ){
-		while ($row = mysqli_fetch_assoc($result)) {
-                        $today_notification = \App\Enquiry::where(['enq_emp_id'=>$row['id'],'enq_followup_date'=>$date])->count();
-			$tokens = $row["token"];
-                        
-                        $message = array("message" => "Today You Have a ".$today_notification." Folloup's");
-                        $this->send_notification($tokens,$message);
-		}
-	}
-	mysqli_close($conn);
-//        $id = //Auth::guard('employee')->user()->id;//Cookie::get('logged_id');
-//	$message = array("message" => " FCM Push Notification: Hello Laravel!.");
-	//$message_status = send_notification($tokens, $message);
-	//echo $message_status;
-        
-        
-       
-	
+        $tokens = array();
+        if(count($result) > 0 ){
+            foreach ($result as $row) {
+                $today_notification = \App\Enquiry::where(['enq_emp_id'=>$row['id'],'enq_followup_date'=>$date])->count();
+                $tokens = array($row['token']);
+                $message = array("message" => "Today You Have a '.$today_notification.' Folloup's Server");
+                $this->send_notification($tokens,$message);
+            }
+        }
     }
-    
+
+
+                                    
+
+
     public function send_notification($tokens,$message=""){
          $url = 'https://fcm.googleapis.com/fcm/send';
 		$fields = array(

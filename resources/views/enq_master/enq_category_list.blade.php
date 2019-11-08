@@ -27,7 +27,7 @@
               <a href="{{url('add_enq_category')}}" class="panel-title" style="color: #dc3d59;"><span class="fa fa-plus-square"></span> Add New Category</a>
             </div>
              <?php $x = 1; ?>
-            <div class="box-body">
+            <div class="box-body" style="overflow-x:auto;">
               <table id="example1" class="table table-bordered table-striped" border="1">
                 <thead>
                 <tr>
