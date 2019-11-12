@@ -208,7 +208,7 @@ $ii = $jj = 1;$m = 0;
                                         ?>
                                         <tr class="subprocess_row delparam" >
                                         <td style="width:2%;"></td>
-                                        <td><i class="fa fa-plus-circle add_field_button1" style="color: blue;" id="parameter_field[{{$m}}][product][]"></i><i class="fa fa-minus-circle remove_field1" style="color: red;"></i></td>
+                                        <td><i class="fa fa-plus-circle add_field_button12" style="color: blue;font-size: x-large;" id="parameter_field[{{$m}}][product][]"></i><i class="fa fa-minus-circle remove_field1" style="color: red;font-size: x-large;"></i></td>
                                         <td><input type="text" name="parameter_field[{{$m}}][product][]" id="parameter_field[{{$m}}][product][]" class="form-control checkblank" rows="1" value="{{$p}}" aria-required="true"></td></tr>
                                         <?php } }
                                 }                                
@@ -314,13 +314,23 @@ $(document).ready(function () {
         
         $(document).on('click','.add_field_button1',function(){
              var trid = $(this).attr('id');
-                 // alert(trid);
+//                  alert(trid);
             $(this).closest('tr').after('<tr class="subprocess_row delparam_'+l+'">\n\
                         <td style="width:2%;"></td>\n\
                         <td><i class="fa fa-plus-circle add_field_button1" style="color: blue;font-size: x-large;" id="'+trid+'"></i> <i class="fa fa-minus-circle remove_field1" style="color: red;font-size: x-large;"></i></td>\n\
                         <td><input type="text" name="'+trid+'[product][]" id="'+trid+'[product][]" class="form-control checkblank" rows="1"  aria-required="true"></textarea></td></tr>');
         }); 
+        
+        $(document).on('click','.add_field_button12',function(){
+             var trid = $(this).attr('id');
+//                  alert(trid);
+            $(this).closest('tr').after('<tr class="subprocess_row delparam_'+l+'">\n\
+                        <td style="width:2%;"></td>\n\
+                        <td><i class="fa fa-plus-circle add_field_button1" style="color: blue;font-size: x-large;" id="'+trid+'"></i> <i class="fa fa-minus-circle remove_field1" style="color: red;font-size: x-large;"></i></td>\n\
+                        <td><input type="text" name="'+trid+'" id="'+trid+'" class="form-control checkblank" rows="1"  aria-required="true"></textarea></td></tr>');
+        }); 
     
+
 
     $("#h_lost1").on('click','.remove_field',function(){
            var classname = $(this). closest('tr').attr('class');

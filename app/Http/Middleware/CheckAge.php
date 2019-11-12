@@ -18,7 +18,7 @@ class CheckAge
     {
         if(!Auth::guard('admin')->check() && !Auth::guard('employee')->check())
         {
-            return redirect('admin-login');
+            return redirect('/');
         }
 //        if(!Auth::guard('employee')->check())
 //        {

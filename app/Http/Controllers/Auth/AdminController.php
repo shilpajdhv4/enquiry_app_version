@@ -118,7 +118,7 @@ class AdminController extends Controller
         auth()->guard('admin')->logout();
         $request->session()->flush();
         $request->session()->regenerate();
-        return redirect('admin-login' );
+        return redirect('/' );
     }
     
     public function validateCredentials(UserContract $user, array $credentials)

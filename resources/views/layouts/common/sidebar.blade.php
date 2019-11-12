@@ -37,6 +37,11 @@ $logo = "";
     }
     
 ?>
+<style>
+    i{
+        color: #39fec3;
+    }
+</style>
   <aside class="main-sidebar">
     <section class="sidebar">
       <div class="user-panel">

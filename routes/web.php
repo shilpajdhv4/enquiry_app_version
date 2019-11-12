@@ -20,12 +20,12 @@ Auth::routes();
 Route::get('client-register','Auth\ClientController@showRegform');
 Route::post('client-register','Auth\ClientController@create');
 
-Route::get('admin-login', 'Auth\AdminController@showLoginForm');
+Route::get('/', 'Auth\AdminController@showLoginForm');
 Route::post('admin-login', ['as'=>'admin-login','uses'=>'Auth\AdminController@login']);
 Route::post('/admin-logout', 'Auth\AdminController@logout');//->name('admin.logout');
 
 
-Route::get('/','Auth\LoginController@showLoginForm');
+Route::get('login','Auth\LoginController@showLoginForm')->name('login');
 
 Route::get('home-admin','HomeController@indexAdmin')->name('admin');
 //Employee login
