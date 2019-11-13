@@ -1,5 +1,5 @@
 @extends('layouts.app')
-
+@section('title', 'Home')
 @section('content')
 <?php $color_array=array("bg-aqua","bg-green","bg-yellow","bg-red"); $a = 0; ?>
 <section class="content">

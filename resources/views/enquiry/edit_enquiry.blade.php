@@ -1,13 +1,7 @@
 @extends('layouts.app')
-@section('title', 'Add Owner')
+@section('title', 'Edit Enquiry')
 @section('content')
-<style>
-@media only screen and (max-width: 600px) {
-    .mobile_date {
-        width: 160px;
-    }
-}
-</style>
+
 <?php 
 if(Auth::guard('admin')->check()){
     $setting =array();
@@ -20,16 +14,11 @@ if(Auth::guard('admin')->check()){
         $setting =array();
         if(isset(Auth::guard('admin')->user()->enq_setting)){
             $setting = json_decode(Auth::guard('admin')->user()->enq_setting,true);
-        }
-        
+        }   
 } 
 //exit;
 ?>
-<section class="content-header">
-    <h1>
-        Edit Enquiry
-    </h1>
-</section>
+
 @if (Session::has('alert-success'))
 <div class="alert alert-success alert-block"> <a class="close" data-dismiss="alert" href="#">×</a>
     <h4 class="alert-heading">Success!</h4>
@@ -40,9 +29,7 @@ if(Auth::guard('admin')->check()){
     <div class="row">
         <div class="col-md-12">
             <div class="box" style="border-top: 3px solid #ffffff;">
-                <div class="box-header">
-                    <h3 class="box-title"></h3>
-                </div>
+               
                  {!! Form::model($enquiry_data,[
                 'method' => 'PUT',
                 'url' => ['update-enquiry',$enquiry_data->enq_id],
@@ -54,7 +41,7 @@ if(Auth::guard('admin')->check()){
                     <div class="box-body">
                         <div class="form-group">
                             <label for="userName" class="col-sm-3 control-label">Select Enquiry Template<span style="color:red"> * </span></label>
-                            <div class="radio" col-sm-9>
+                            <div class="radio col-sm-9">
                                 <?php $l = 0; ?>
                             @foreach($enq_template as $temp)
                             <label>
@@ -82,8 +69,9 @@ if(Auth::guard('admin')->check()){
                             <?php 
 //                            exit;
                             $edit_field = json_decode($enquiry_data->enq_fields,true);
-//                            echo "<pre>";print_r($edit_field['Branch']['product'][0]);exit;
+//                            echo "<pre>";print_r($edit_field);exit;
                             $field = json_decode($enq_temp['enq_fields'],true);
+//                            echo "<pre>";print_r($field);exit;
                             $chk = "";
                             $i = $k = 0; 
                             $field_temp = $cat_temp = $required = "";
@@ -106,21 +94,24 @@ if(Auth::guard('admin')->check()){
                                          if(isset($f[1])){
                                              $type = $f[1];
                                              if($f[1] == "logtext"){
-                                                 $field_temp .= '<textarea class="form-control" placeholder="'.$f[0].'" value="" row="3" name="parameter_textbox['.$f[0].'] "'.$required.'>'.$edit_field[$f[0]].'</textarea>';
+                                                 $field_temp .= '<textarea class="form-control" placeholder="'.$f[0].'" value="" row="3" name="parameter_textbox['.$f[0].'] "'.$required.'>'.@$edit_field[$f[0]].'</textarea>';
                                              }
                                                  else if($f[1] == "dropdown"){
                                                      $field_temp .= '<select class="form-control select2" style="width: 100%;" name="parameter_textbox['.$f[0].'][product][] "'.$required.' >';
                                                                    if(isset($f['product'])){
                                                                        foreach($f['product'] as $p){
-                                                                           if($edit_field[$f[0]]['product'][0] == $p) $chk = "selected";
+                                                                           if(@$edit_field[$f[0]]['product'][0] == $p){ $chk = "selected";
                                                                         $field_temp .= '<option value="'.$p.'" '.$chk.'>'.$p.'</option>';
+                                                                           }else{
+                                                                               $field_temp .= '<option value="'.$p.'" >'.$p.'</option>';                                                                               
+                                                                           }
                                                                        }
                                                                    }
 
                                                               $field_temp .= '</select>';
                                                  }
                                                  else{
-                                                     $field_temp .= '<input type="'.$type.'" class="form-control" placeholder="'.$f[0].'" value="'.$edit_field[$f[0]].'" name="parameter_textbox['.$f[0].'] "'.$required.'>';
+                                                     $field_temp .= '<input type="'.$type.'" class="form-control" placeholder="'.$f[0].'" value="'.@$edit_field[$f[0]].'" name="parameter_textbox['.$f[0].'] "'.$required.'>';
                                                  }
                                              }
                                             $field_temp .= '</div>';
@@ -168,7 +159,9 @@ if(Auth::guard('admin')->check()){
                                     }
                                 $cat_temp .= '</select></div><div id="sub_level_box"></div>';
                                  }
-                                 $i++;$prev_cat_id = $check[0];
+                                 $i++;
+                                 if($check[0] != "")
+                                 $prev_cat_id = $check[0];
                                 
                             }
                             echo $cat_temp;
@@ -209,63 +202,59 @@ if(Auth::guard('admin')->check()){
                         <?php } ?>
                         
                         <?php if(!in_array(6, $setting)) { ?>
-                        <div class="form-group">
-                            <label for="company" class="col-sm-2 control-label">Follow Up</label>
-                        </div>
-                        <table style="margin: 10px 10px 10px 10px;" class="table" id="myTable" >
-                            <tbody id="h_lost">
+                            <div id="h_lost">
                                 <?php $x=1;$k=0; $json_data = json_decode($enquiry_data->follow_up,true); 
 //                                echo "<pre>";print_r($json_data);exit;
                                 if(!empty($json_data)>0){
                                 foreach($json_data as $json){
 //                                    echo "<pre>";print_r($json);exit;
                                 ?>
-                                <tr class="first">
-                                    <td>
-                                        <textarea class="form-control mobile_date" rows="3" placeholder="Enter Here..." name="follow_up[{{$k}}][0]" readonly >{{$json[0]}}</textarea>   
-                                    </td>
-                                    <td>
-                                        <div class="input-group date">
+                                <div class="form-group abc_count">
+                                    <label for="userName" class="col-sm-1 control-label">1.</label>
+                                    <label for="userName" class="col-sm-2 control-label">Follow Up Description</label>
+                                    <div class="col-sm-4">
+                                        <textarea class="form-control mobile_date" rows="3" cols="40" placeholder="Enter Here..." name="follow_up[{{$k}}][0]" readonly >{{$json[0]}}</textarea>   
+                                    </div>
+                                    <label for="company" class="col-sm-2 control-label">Follow Up Date</label>
+                                    <div class="col-sm-2">
+                                        <div class="input-group">
+                                            <input type="text" name="follow_up[{{$k}}][1]" class="form-control " placeholder="DD-MM-YYYY" value="{{$json[1]}}" readonly  />
+                                            <?php if($x == 1) { ?>
                                             <div class="input-group-addon">
-                                              <i class="fa fa-calendar"></i>
+                                              <i class="fa fa-plus-circle btn-success add_field_button"></i>
                                             </div>
-                                            <input type="text" name="follow_up[{{$k}}][1]" class="form-control " value="{{$json[1]}}" readonly  />
+                                            <?php } ?>
                                         </div>
-                                    </td>
-                                    <input type="hidden" name="follow_up[{{$k}}][2]" value="{{$json[2]}}" />
-                                    <?php if($x == 1) { ?>
-                                    <td><i class="fa fa-plus-circle btn-success add_field_button"></i></td>
-                                    <!--<td><a href="javascript:void(0)" class="btn btn-success btn-mini add_field_button">Add</a></td>-->
-                                    <?php }else{ ?><td></td><?php } ?>
-                                </tr>
+                                    </div>
+                                </div>                                
                                 <?php $x++;$k++; }}else{ ?>
-                                <tr class="first">
-                                    <td>
-                                        <textarea class="form-control mobile_date" rows="3" placeholder="Enter Here..." name="follow_up[0][0]" required ></textarea>   
-                                    </td>
-                                    <td>
-                                        <div class="input-group date">
-                                            <div class="input-group-addon">
-                                              <i class="fa fa-calendar"></i>
-                                            </div>
-                                            <input type="text" name="follow_up[0][1]" class="form-control  datepicker" value="" />
+                                    <div class="form-group abc_count">
+                                        <label for="userName" class="col-sm-1 control-label">1.</label>
+                                        <label for="userName" class="col-sm-2 control-label">Follow Up Description</label>
+                                        <div class="col-sm-4">
+                                            <textarea class="form-control mobile_date" rows="3" cols="40" placeholder="Enter Here..." name="follow_up[0][0]"  ></textarea>   
                                         </div>
-                                    </td>
-                                    <td><i class="fa fa-plus-circle btn-success add_field_button"></i></td>
-                                    <input type="hidden" name="follow_up[0][2]" value="<?php echo date('Y-m-d h:m:s'); ?>" />
-                                </tr>    
+                                        <label for="company" class="col-sm-2 control-label">Follow Up Date</label>
+                                        <div class="col-sm-2">
+                                            <div class="input-group">
+                                                <input type="text" name="follow_up[0][1]" class="form-control datepicker " placeholder="DD-MM-YYYY" value=""  />
+                                                <div class="input-group-addon">
+                                                  <i class="fa fa-plus-circle btn-success add_field_button"></i>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
                                 <?php } ?>
-                            </tbody>
-                        </table>
+                            </div> 
                         <?php } ?>
-                    </div>
-                    <div class="box-footer">
-                        <button type="submit"  id="btnsubmit" class="btn btn-success">Submit</button>
-                        <a href="{{url('enquiry-list')}}" class="btn btn-danger" >Cancel</a>
+                        <div class="box-footer">
+                            <button type="submit"  id="btnsubmit" class="btn btn-success">Submit</button>
+                            <a href="{{url('enquiry-list')}}" class="btn btn-danger" >Cancel</a>
+                        </div>
                     </div>
                 </form>
-            </div>
         </div>   
+    </div>
     </div>
 </section>
 <script src="bower_components/jquery/dist/jquery.min.js"></script>
@@ -347,9 +336,20 @@ $(document).ready(function () {
 //        alert();
         x++;
         var date = $("#cop_date").val();
-        var message = $('.input_fields_wrap tr').length;
+        var sr_no = $('.abc_count').length;
         
-        $("#h_lost").append('<tr class="first"><td><textarea class="form-control mobile_date" rows="3" placeholder="Enter Here..." name="follow_up['+x+'][0]" required ></textarea></td><td><div class="input-group date"><div class="input-group-addon"><i class="fa fa-calendar"></i></div><input type="text" name="follow_up['+ x +'][1]" id="datepicker" style="width:50px;"  class="form-control datepicker" value="" /></div></td><input type="hidden" class="form-control" name="follow_up['+x+'][2]" value="<?php echo date('Y-m-d h:m:s'); ?>" readonly /><td><i class="fa fa-minus-circle btn-danger remove_field"></i></td></tr>')
+        $("#h_lost").append('<div class="form-group abc_count">\n\
+                                \n\<label for="userName" class="col-sm-1 control-label">'+ (sr_no + 1) +'.</label>\n\
+                                <label for="userName" class="col-sm-2 control-label">Follow Up Description</label>\n\
+                                <div class="col-sm-4">\n\
+                                <textarea class="form-control mobile_date" rows="3" cols="40" placeholder="Enter Here..." name="follow_up['+x+'][0]" required ></textarea>\n\
+                                </div>\n\
+                                <label for="company" class="col-sm-2 control-label">Follow Up Date</label>\n\
+                                <div class="col-sm-2">\n\
+                                <div class="input-group"><input type="text" name="follow_up['+ x +'][1]" id="datepicker" class="form-control datepicker" placeholder="DD-MM-YYYY" value="" />\n\
+                                <div class="input-group-addon"><i class="fa fa-minus-circle btn-danger remove_field"></i></div>\n\
+                                </div><input type="hidden" class="form-control" name="follow_up['+x+'][2]" value="<?php echo date('Y-m-d h:m:s'); ?>" readonly /></div></div>');
+//        $("#h_lost").append('<tr class="first"><td><textarea class="form-control mobile_date" rows="3" placeholder="Enter Here..." name="follow_up['+x+'][0]" required ></textarea></td><td><div class="input-group date"><div class="input-group-addon"><i class="fa fa-calendar"></i></div><input type="text" name="follow_up['+ x +'][1]" id="datepicker" style="width:50px;"  class="form-control datepicker" value="" /></div></td><input type="hidden" class="form-control" name="follow_up['+x+'][2]" value="<?php echo date('Y-m-d h:m:s'); ?>" readonly /><td><i class="fa fa-minus-circle btn-danger remove_field"></i></td></tr>')
        
 //        $('select').select2();
         $('.datepicker-autoclose').datepicker();  
@@ -362,8 +362,9 @@ $(document).ready(function () {
         
     });
        
-    $("#h_lost").on('click', '.remove_field', function () {
-        $(this).parent().parent().remove();
+   $("#h_lost").on('click', '.remove_field', function () {
+//        $(this).parent().parent().parent().remove();
+        $(this).parents('.form-group').remove();
     });
     
 	

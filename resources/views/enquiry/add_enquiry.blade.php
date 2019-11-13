@@ -1,5 +1,5 @@
 @extends('layouts.app')
-@section('title', 'Add Owner')
+@section('title', 'Add Enquiry')
 @section('content')
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <style>
@@ -24,11 +24,6 @@ if(Auth::guard('admin')->check()){
             $setting = json_decode(Auth::guard('admin')->user()->enq_setting,true);
         }
 } ?>
-<section class="content-header">
-    <h1>
-        Add New Enquiry
-    </h1>
-</section>
 @if (Session::has('alert-success'))
 <div class="alert alert-success alert-block"> <a class="close" data-dismiss="alert" href="#">×</a>
     <h4 class="alert-heading">Success!</h4>
@@ -39,9 +34,6 @@ if(Auth::guard('admin')->check()){
     <div class="row">
         <div class="col-md-12">
             <div class="box" style="border-top: 3px solid #ffffff;">
-                <div class="box-header">
-                    <h3 class="box-title"></h3>
-                </div>
                 <form class="form-horizontal" id="userForm" method="post" action="{{ url('add-enquiry') }}">
                     {{ csrf_field() }}
                     <div class="box-body">
@@ -78,29 +70,24 @@ if(Auth::guard('admin')->check()){
                         
                         <div id="product_box" class="form-group"></div>
                         <?php } if(!in_array(6, $setting)) { ?>
-                        <div class="form-group">
-                            <label for="company" class="col-sm-2 control-label">Follow Up</label>
-                        </div>
-                        <table style="margin: 2px 2px 2px 2px;" class="table" >
-                            <tbody id="h_lost">                                
-                                <tr class="first">
-                                    <td>
-                                        <textarea class="form-control mobile_date" rows="3" cols="40" placeholder="Enter Here..." name="follow_up[0][0]"  ></textarea>   
-                                    </td>
-                                    <td>
-                                        <div class="input-group date datepicker">
-                                            <div class="input-group-addon">
-                                              <i class="fa fa-calendar"></i>
-                                            </div>
-                                            <input type="text" name="follow_up[0][1]" class="form-control datepicker " value=""  />
+                        <div id="h_lost">
+                            <div class="form-group abc_count">
+                                <label for="userName" class="col-sm-1 control-label">1.</label>
+                                <label for="userName" class="col-sm-2 control-label">Follow Up Description</label>
+                                <div class="col-sm-4">
+                                    <textarea class="form-control mobile_date" rows="3" cols="40" placeholder="Enter Here..." name="follow_up[0][0]"  ></textarea>   
+                                </div>
+                                <label for="company" class="col-sm-2 control-label">Follow Up Date</label>
+                                <div class="col-sm-2">
+                                    <div class="input-group">
+                                        <input type="text" name="follow_up[0][1]" class="form-control datepicker " placeholder="DD-MM-YYYY" value=""  />
+                                        <div class="input-group-addon">
+                                          <i class="fa fa-plus-circle btn-success add_field_button"></i>
                                         </div>
-                                    </td>
-                                    <td><i class="fa fa-plus-circle btn-success add_field_button"></i></td>
-                                    <input type="hidden" name="follow_up[0][2]" value="<?php echo date('Y-m-d h:m:s'); ?>" />
-                                </tr>
-                                
-                            </tbody>
-                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                         <?php } ?>
                     </div>
                     <div class="box-footer">
@@ -193,9 +180,22 @@ $(document).ready(function () {
 //        alert();
         x++;
         var date = $("#cop_date").val();
-        var message = $('.input_fields_wrap tr').length;
+        var sr_no = $('.abc_count').length;
         
-        $("#h_lost").append('<tr class="first"><td><textarea class="form-control mobile_date" rows="3" cols="40" placeholder="Enter Here..." name="follow_up['+x+'][0]" required ></textarea></td><td><div class="input-group date datepicker"><div class="input-group-addon"><i class="fa fa-calendar"></i></div><input type="text" name="follow_up['+ x +'][1]" id="datepicker" class="form-control datepicker" value="" /></div></td><input type="hidden" class="form-control" name="follow_up['+x+'][2]" value="<?php echo date('Y-m-d h:m:s'); ?>" readonly /><td><i class="fa fa-minus-circle btn-danger remove_field"></i></td></tr>')
+        $("#h_lost").append('<div class="form-group abc_count">\n\
+                                \n\<label for="userName" class="col-sm-1 control-label">'+ (sr_no + 1) +'.</label>\n\
+                                <label for="userName" class="col-sm-2 control-label">Follow Up Description</label>\n\
+                                <div class="col-sm-4">\n\
+                                <textarea class="form-control mobile_date" rows="3" cols="40" placeholder="Enter Here..." name="follow_up['+x+'][0]" required ></textarea>\n\
+                                </div>\n\
+                                <label for="company" class="col-sm-2 control-label">Follow Up Date</label>\n\
+                                <div class="col-sm-2">\n\
+                                <div class="input-group"><input type="text" name="follow_up['+ x +'][1]" id="datepicker" class="form-control datepicker" placeholder="DD-MM-YYYY" value="" />\n\
+                                <div class="input-group-addon"><i class="fa fa-minus-circle btn-danger remove_field"></i></div>\n\
+                                </div><input type="hidden" class="form-control" name="follow_up['+x+'][2]" value="<?php echo date('Y-m-d h:m:s'); ?>" readonly /></div></div>');
+        
+        
+//        $("#h_lost").append('<tr class="first"><td><textarea class="form-control mobile_date" rows="3" cols="40" placeholder="Enter Here..." name="follow_up['+x+'][0]" required ></textarea></td><td><div class="input-group date datepicker"><div class="input-group-addon"><i class="fa fa-calendar"></i></div><input type="text" name="follow_up['+ x +'][1]" id="datepicker" class="form-control datepicker" value="" /></div></td><input type="hidden" class="form-control" name="follow_up['+x+'][2]" value="<?php echo date('Y-m-d h:m:s'); ?>" readonly /><td><i class="fa fa-minus-circle btn-danger remove_field"></i></td></tr>')
        
 //        $('select').select2();
         $('.datepicker-autoclose').datepicker();  
@@ -209,7 +209,8 @@ $(document).ready(function () {
     });
        
     $("#h_lost").on('click', '.remove_field', function () {
-        $(this).parent().parent().remove();
+//        $(this).parent().parent().parent().remove();
+        $(this).parents('.form-group').remove();
     });
     
 	

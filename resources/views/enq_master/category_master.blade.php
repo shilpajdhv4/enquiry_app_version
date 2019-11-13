@@ -1,5 +1,5 @@
 @extends('layouts.app')
-@section('title', 'Add Process')
+@section('title', 'Add Category')
 @section('content')
 <style>
     /*    .wizard > .content {
@@ -31,7 +31,7 @@
 @endif
 <section class="content-header">
     <h1>
-        Enquiry Category
+        Add Category
     </h1>
 </section>
 

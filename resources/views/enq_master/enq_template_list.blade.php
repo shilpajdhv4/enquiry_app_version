@@ -1,5 +1,5 @@
 @extends('layouts.app')
-@section('title', 'Item-List')
+@section('title', 'Template List')
 @section('content')
 <?php 
 if(Auth::guard('admin')->check()){

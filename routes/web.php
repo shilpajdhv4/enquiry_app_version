@@ -83,6 +83,9 @@ Route::get('edit-enquiry','EnquiryController@editEnquiry');
 Route::put('update-enquiry/{id}','EnquiryController@updateEnquiry');
 Route::get('delete-enquiry/{id}','EnquiryController@deletEnquiry');
 //Route::get('mobile-validate/{id}','EnquiryController@validateMobile');
+//Employee Enquiry
+Route::get('enq_temp_value1/{id}','EnquiryController@getEnqfield1');
+Route::get('enq_sub_cat1/{id}','EnquiryController@getSubcat1');
 
 Route::get('product_val/{id}','EnquiryController@getProduct');
 Route::get('get_city/{id}','MasterController@getCity');

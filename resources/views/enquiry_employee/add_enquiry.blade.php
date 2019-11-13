@@ -1,5 +1,5 @@
-@extends('layouts.app')
-@section('title', 'Add Owner')
+@extends('layouts.employee.app')
+@section('title', 'Add Enquiry')
 @section('content')
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <style>
@@ -24,93 +24,91 @@ if(Auth::guard('admin')->check()){
             $setting = json_decode(Auth::guard('admin')->user()->enq_setting,true);
         }
 } ?>
-<section class="content-header">
-    <h1>
-        Add New Enquiry
-    </h1>
-</section>
-@if (Session::has('alert-success'))
-<div class="alert alert-success alert-block"> <a class="close" data-dismiss="alert" href="#">×</a>
-    <h4 class="alert-heading">Success!</h4>
-    {{ Session::get('alert-success') }}
-</div>
-@endif
 <section class="content">
-    <div class="row">
-        <div class="col-md-12">
-            <div class="box" style="border-top: 3px solid #ffffff;">
-                <div class="box-header">
-                    <h3 class="box-title"></h3>
-                </div>
-                <form class="form-horizontal" id="userForm" method="post" action="{{ url('add-enquiry') }}">
-                    {{ csrf_field() }}
-                    <div class="box-body">
-                        <input type="hidden" name="en_id" id="en_id" value="" />
-                        <div class="form-group">
-                            <label for="userName" class="col-sm-3 control-label">Select Enquiry Template<span style="color:red"> * </span></label>
-                            <div class="radio col-sm-9">
-                                <?php $l = 0; ?>
-                            @foreach($enq_template as $temp)
-                            <label>
-                                  <input type="radio" name="enq_template_id" id="optionsRadios2 enq_template_id" value="{{$temp->enq_temp_id}}" <?php if($l == 0) echo "checked"; ?>>{{$temp->temp_name}}
-                            </label>
-                            <?php $l++; ?>
-                            @endforeach
-                            </div>
+        <div class="container-fluid">
+           @if (Session::has('alert-success'))
+            <div class="alert alert-success alert-block"> <a class="close" data-dismiss="alert" href="#">×</a>
+                <h4 class="alert-heading">Success!</h4>
+                {{ Session::get('alert-success') }}
+            </div>
+            @endif
+            <!-- Basic Validation -->
+            <div class="row clearfix">
+                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                    <div class="card">
+                        <div class="header">
+                            <h2>Add New Enquiry</h2>
                         </div>
-                        <div class="form-group">
+                        <div class="body">
+                            <form  id="userForm" method="post" action="{{ url('add-enquiry') }}">
+                                {{ csrf_field() }}
+                                <input type="hidden" name="en_id" id="en_id" value="" />
+                                <div class="form-group form-float">
+                                    <label for="userName" class="form-label"><b>Select Enquiry Template</b><span style="color:red"> * </span></label>
+                                    <!--<div class="col-sm-9">-->
+                                        <?php $l = 0; ?>
+                                            @foreach($enq_template as $temp)
+                                            <input type="radio" name="enq_template_id" id="optionsRadios2 enq_template_id{{$l}}" class="with-gap" value="{{$temp->enq_temp_id}}" <?php if($l == 0) echo "checked"; ?>>
+                                            <label for="optionsRadios2 enq_template_id{{$l}}">{{$temp->temp_name}}</label>
+                                            <?php $l++; ?>
+                                            @endforeach
+                                    <!--</div>-->
+                                </div>
+                            
                             <?php if(!in_array(2, $setting)) { ?>
-                            <label for="userName" class="col-sm-2 control-label">Mobile No<span style="color:red"> * </span></label>
-                            <div class="col-sm-4">
-                                <input type="text" class="form-control" onkeypress="return phoneno(event)" id="enq_mobile_no" onkeyup="check();"  placeholder="Mobile No" value="" name="enq_mobile_no"  required >
-                            </div>
+                                <div class="form-group form-float">
+                                    <div class="form-line">
+                                        <input type="tel" class="form-control" onkeypress="return phoneno(event)" id="enq_mobile_no" onkeyup="check();" name="enq_mobile_no" required>
+                                        <label class="form-label">Mobile No</label>
+                                    </div>
+                                </div>
                             <?php } if(!in_array(4, $setting)) { ?>
-                            <label for="company" class="col-sm-2 control-label">Customer Name <span style="color:red"> * </span></label>
-                            <div class="col-sm-4">
-                                <input type="text" class="form-control" id="enq_name" placeholder="Customer Name" value="" name="enq_name"  required>
-                            </div>
+                                <div class="form-group form-float">
+                                    <div class="form-line">
+                                        <input type="text" class="form-control" name="enq_name" id="enq_name" required>
+                                        <label class="form-label">Customer Name</label>
+                                    </div>
+                                </div>
                             <?php } ?>
-                        </div>
-                        <?php if(!in_array(3, $setting)) { ?>
+                                <?php if(!in_array(3, $setting)) { ?>
                         <div id="field_box"></div>
                         <?php } if(!in_array(1, $setting)) { ?>
                         <div id="category_box" class="form-group"></div>
                         
                         <div id="product_box" class="form-group"></div>
                         <?php } if(!in_array(6, $setting)) { ?>
-                        <div class="form-group">
-                            <label for="company" class="col-sm-2 control-label">Follow Up</label>
-                        </div>
-                        <table style="margin: 2px 2px 2px 2px;" class="table" >
+                        <table width="100%">
                             <tbody id="h_lost">                                
                                 <tr class="first">
                                     <td>
-                                        <textarea class="form-control mobile_date" rows="3" cols="40" placeholder="Enter Here..." name="follow_up[0][0]"  ></textarea>   
-                                    </td>
-                                    <td>
-                                        <div class="input-group date datepicker">
-                                            <div class="input-group-addon">
-                                              <i class="fa fa-calendar"></i>
+                                        <div class="form-group form-float">
+                                            <div class="form-line">
+                                                <textarea name="description" cols="30" rows="5" class="form-control no-resize" required></textarea>
+                                                <label class="form-label">Followup Description</label>
                                             </div>
-                                            <input type="text" name="follow_up[0][1]" class="form-control datepicker " value=""  />
                                         </div>
                                     </td>
-                                    <td><i class="fa fa-plus-circle btn-success add_field_button"></i></td>
-                                    <input type="hidden" name="follow_up[0][2]" value="<?php echo date('Y-m-d h:m:s'); ?>" />
                                 </tr>
-                                
+                                <tr>
+                                    <td>
+                                    <div class="form-group form-float">
+                                        <div class="form-line">
+                                            <input type="date" class="form-control" name="enq_name" id="enq_name" required>
+                                            <!--<label class="form-label">Followup Date</label>-->
+                                        </div>
+                                    </div>
+                                    </td>
+                                </tr>
                             </tbody>
                         </table>
                         <?php } ?>
+                                <button class="btn btn-primary waves-effect" type="submit">SUBMIT</button>
+                            </form>
+                        </div>
                     </div>
-                    <div class="box-footer">
-                        <button type="submit"  id="btnsubmit" class="btn btn-success">Submit</button>
-                        <a href="{{url('enquiry-list')}}" class="btn btn-danger" >Cancel</a>
-                    </div>
-                </form>
+                </div>
             </div>
-        </div>   
-    </div>
+        </div>
 </section>
 <script src="bower_components/jquery/dist/jquery.min.js"></script>
 <script src="bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
@@ -119,28 +117,31 @@ if(Auth::guard('admin')->check()){
 <script type='text/javascript' src='js/jquery.validate.js'></script>
 <script>
 $(document).ready(function () {
-    $('.select2').select2();
+//    $('.select2').select2();
     //$('input[name="enq_template_id"]:radio').attr('checked', true).trigger('click');
     $("#fpago2").attr('checked', true).trigger('click');
     
 	
-	 $('.datepicker').datepicker({
-            format: "dd-mm-yyyy",
-            autoclose: true,
-            todayHighlight: true
-    })
+//	 $('.datepicker').datepicker({
+//            format: "dd-mm-yyyy",
+//            autoclose: true,
+//            todayHighlight: true
+//    })
 	
     $('input[name="enq_template_id"]:radio').on("click", function(){
         var trid = $(this).val();
          $.ajax({
-            url: 'enq_temp_value/'+ trid,
+            url: 'enq_temp_value1/'+ trid,
             type: "GET",
             success: function(data) {
                 var jsonData = JSON.parse(data);
                 console.log(data);
                 $("#field_box").html(jsonData.field);
                 $("#category_box").html(jsonData.category);
-                $('.select2').select2();
+                $("#field_box").find('.form-control').focus(function () {
+                    $(this).closest('.form-line').addClass('focused');
+                     $('#optgroup').multiSelect({ selectableOptgroup: true });
+                });
             }
         });
     });  
@@ -149,16 +150,16 @@ $(document).ready(function () {
     $(document).on('change', '#category', function(){
         var id = $(this).val();
         $.ajax({
-            url: 'enq_sub_cat/'+ id,
+            url: 'enq_sub_cat1/'+ id,
             type: "GET",
             success: function(data) {
                 console.log(data);
                 var jsonData = JSON.parse(data);
                 console.log(jsonData);
-                $('select').select2();
+//                $('select').select2();
                 $("#sub_level_box").html(jsonData.category);
                 $("#product_box").html(jsonData.product);
-                $('.select2').select2();
+//                $('.select2').select2();
             }
         });
     }); 
@@ -166,16 +167,16 @@ $(document).ready(function () {
     $(document).on('change', '#category1', function(){
         var id = $(this).val();
         $.ajax({
-            url: 'enq_sub_cat/'+ id,
+            url: 'enq_sub_cat1/'+ id,
             type: "GET",
             success: function(data) {
 				console.log(data);
                 var jsonData = JSON.parse(data);
                 console.log(jsonData);
-                $('select').select2();
+//                $('select').select2();
                 $("#sub_level_box").append(jsonData.category);
                 $("#product_box").html(jsonData.product);
-                $('.select2').select2();
+//                $('.select2').select2();
             }
         });
     });  
@@ -254,7 +255,7 @@ function isNumber(evt) {
 function phoneno(){          
             $('#enq_mobile_no').keypress(function(e) {
                 var length = jQuery(this).val().length;
-       if(length > 11) {
+       if(length > 9) {
             return false;
        } else if(e.which != 8 && e.which != 0 && (e.which < 48 || e.which > 57)) {
             return false;

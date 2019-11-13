@@ -1,5 +1,5 @@
 @extends('layouts.app')
-@section('title', 'Add Owner')
+@section('title', 'Edit Enquiry Template')
 @section('content')
 <style>
 @media only screen and (max-width: 600px) {

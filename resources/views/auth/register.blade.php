@@ -1,5 +1,5 @@
 @extends('layouts.app')
-
+@section('title', 'Add Employee')
 @section('content')
 <style>
     .invalid-feedback{
@@ -22,7 +22,7 @@ if(Auth::guard('employee')->check()){
 ?>
 <section class="content-header">
     <h1>
-        Employee Register
+        Add Employee
     </h1>
     <ol class="breadcrumb">
         <li><a href="{{url('user_mgt')}}"><i class="fa fa-dashboard"></i>Employee</a></li>

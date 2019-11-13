@@ -1,5 +1,5 @@
 @extends('layouts.app')
-@section('title', 'Add Owner')
+@section('title', 'Edit Category')
 @section('content')
 <style>
     @media only screen and (max-width: 600px) {
@@ -11,7 +11,7 @@
 
 <section class="content-header">
     <h1>
-        Edit Enquiry Category
+        Edit Category
     </h1>
 </section>
 @if (Session::has('alert-success'))

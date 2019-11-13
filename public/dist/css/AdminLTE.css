@@ -201,7 +201,7 @@ a:focus {
   -o-transition: margin-left 0.3s ease-in-out;
   transition: margin-left 0.3s ease-in-out;
   margin-bottom: 0;
-  margin-left: 230px;
+  /*margin-left: 230px;*/
   border: none;
   min-height: 50px;
   border-radius: 0;
@@ -397,6 +397,20 @@ a:focus {
   .content-header > .breadcrumb li:before {
     color: #97a0b3;
   }
+  
+  .content-header {
+    position: relative;
+    padding: 5px 0px 0px 2px;
+  }
+  
+  .content {
+    min-height: 250px;
+    padding: 0px 0 0 0;
+    margin-right: auto;
+    margin-left: auto;
+    padding-left: 0px;
+    padding-right: 0px;
+  }
 }
 .navbar-toggle {
   color: #fff;
@@ -464,7 +478,7 @@ a:focus {
 }
 @media (max-width: 767px) {
   .main-sidebar {
-    padding-top: 100px;
+   /*padding-top: 100px;*/
   }
 }
 @media (max-width: 767px) {
@@ -500,7 +514,7 @@ a:focus {
 .user-panel {
   position: relative;
   width: 100%;
-  padding: 10px;
+  padding: 26px;
   overflow: hidden;
 }
 .user-panel:before,

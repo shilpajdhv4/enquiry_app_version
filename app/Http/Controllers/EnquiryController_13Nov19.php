@@ -281,7 +281,7 @@ class EnquiryController extends Controller
                      ->leftjoin('enq_location','enq_location.loc_id','enq_enquiries.lid')
                      ->where(['enq_enquiries.is_active'=>0,'enq_user_id'=>$id])
                      ->get();
-//            return view('enquiry.enquiry_list',['enquiry_list'=>$enquiry_list]);
+            return view('enquiry.enquiry_list',['enquiry_list'=>$enquiry_list]);
         }
         else if(Auth::guard('employee')->check()){
             $cid = $this->employee->cid;
@@ -294,9 +294,9 @@ class EnquiryController extends Controller
                      ->leftjoin('enq_location','enq_location.loc_id','enq_enquiries.lid')
                      ->where(['enq_enquiries.is_active'=>0,'enq_enquiries.enq_user_id'=>$cid,'enq_enquiries.lid'=>$lid,'enq_enquiries.enq_emp_id'=>$emp_id])
                      ->get();
-//            return view('enquiry_employee.enquiry_list',['enquiry_list'=>$enquiry_list]);
+            return view('enquiry_employee.enquiry_list',['enquiry_list'=>$enquiry_list]);
         }  
-        return view('enquiry.enquiry_list',['enquiry_list'=>$enquiry_list]);
+//        return view('enquiry.enquiry_list',['enquiry_list'=>$enquiry_list]);
         
     }
     
@@ -306,14 +306,14 @@ class EnquiryController extends Controller
             if(Auth::guard('admin')->check()){
                 $user_id = $this->admin->rid;
                 $enq_template = \App\EnquiryTemplate::select('temp_name','enq_temp_id')->where(['user_id'=>$user_id,'is_active'=>0])->get();
-//                return view('enquiry.add_enquiry',['enq_template'=>$enq_template]);
+                return view('enquiry.add_enquiry',['enq_template'=>$enq_template]);
             }else if( Auth::guard('employee')->check()){
                 $user_id = $this->employee->cid;
                 $lid = $this->employee->lid;
                 $enq_template = \App\EnquiryTemplate::select('temp_name','enq_temp_id')->where(['user_id'=>$user_id,'is_active'=>0])->whereRaw('FIND_IN_SET(?, loc_id)', [$lid])->get();
-//                return view('enquiry_employee.add_enquiry',['enq_template'=>$enq_template]);
+                return view('enquiry_employee.add_enquiry',['enq_template'=>$enq_template]);
             }
-            return view('enquiry.add_enquiry',['enq_template'=>$enq_template]);
+//            return view('enquiry.add_enquiry',['enq_template'=>$enq_template]);
 //            echo "<pre>";print_r($enq_template);exit;
             //,['city'=>$city,'brand'=>$brand,'custome_data'=>$custome_data,'product_data'=>$product_data,'employee_data'=>$employee_data,'enquiry_status'=>$enquiry_status,'last_entry'=>$last_entry,'source'=>$source,'status'=>$status,'category'=>$category]);
         }else{

@@ -1,5 +1,5 @@
 @extends('layouts.app')
-@section('title', 'Edit user')
+@section('title', 'Edit Employee')
 @section('content')
 <style>
     .error{

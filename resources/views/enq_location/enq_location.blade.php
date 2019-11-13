@@ -1,5 +1,5 @@
 @extends('layouts.app')
-@section('title', 'Enquiry-List')
+@section('title', 'Location-List')
 @section('content')
 <link rel="stylesheet" href="bower_components/datatables.net-bs/css/dataTables.bootstrap.min.css">
 <section class="content-header">

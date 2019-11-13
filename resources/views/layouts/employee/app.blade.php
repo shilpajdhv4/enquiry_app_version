@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
-    <title>Form Validation | Bootstrap Based Admin Template - Material Design</title>
+    <title>Enquiry App</title>
     <!-- Favicon-->
     <link rel="icon" href="employee/favicon.ico" type="image/x-icon">
 
@@ -60,8 +60,8 @@
             <i class="material-icons">close</i>
         </div>
     </div>
-    @include('layouts.employee/.header')
-    @include('layouts.common.sidebar')
+    @include('layouts.employee.header')
+    @include('layouts.employee.sidebar')
      
     <section class="content">
         @yield('content')

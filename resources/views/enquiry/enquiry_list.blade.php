@@ -2,15 +2,7 @@
 @section('title', 'Enquiry-List')
 @section('content')
 <link rel="stylesheet" href="bower_components/datatables.net-bs/css/dataTables.bootstrap.min.css">
-<section class="content-header">
-    <h1>
-        Enquiry List
-    </h1>
-    <ol class="breadcrumb">
-        <li><a href="#"><i class="fa fa-dashboard"></i> Enquiry </a></li>
-        <li class="active">Enquiry List</li>
-    </ol>
-</section>
+
 @if (Session::has('alert-success'))
 <div class="alert alert-success alert-block"> <a class="close" data-dismiss="alert" href="#">×</a>
     <h4 class="alert-heading">Success!</h4>
@@ -49,9 +41,10 @@
                         <td>{{$row->enq_followup_date}}</td>
                         <td>{{$row->loc_name}}</td>
                         <td>
-                            <a href="{{ url('edit-enquiry?id='.$row->enq_id)}}"><span class="fa fa-edit"></span></a></td>
-                        <td><a href="{{ url('delete-enquiry')}}/{{$row->enq_id}}" style="color:red" class="delete"><span class="fa fa-trash"></span></a>
+                            <a href="{{  url('edit-enquiry?id='.$row->enq_id)}}"><span class="fa fa-edit"></span></a>
+                            <a href="{{ url('delete-enquiry')}}/{{$row->enq_id}" style="color:red" class="delete"><span class="fa fa-trash"></span></a>
                         </td>
+                       
                     </tr>
                     @endforeach
 
@@ -85,6 +78,7 @@ $(function () {
         'info': true,
         'autoWidth': false
     })
+    
 })
 </script>
 @endsection

@@ -1,10 +1,7 @@
-@extends('layouts.employee.app')
-
+@extends('layouts.app')
+@section('title', 'Home')
 @section('content')
-<div class="container">
-    <div class="row justify-content-center">
-        
-    </div>
+<section class="content">
     <div class="col-md-6">
     <div class="box box-info ">
             <div class="box-header with-border">
@@ -21,14 +18,13 @@
                 <table class="table no-margin" >
                   <thead>
                   <tr>
-                    <th>Sr-No</th>
+                    <th>Sr.No.</th>
                     <th>Cust. Name</th>
                     <th>Mob. No</th>
-                    <!--<th>Prod.Name</th>-->
                   </tr>
                   </thead>
                   <tbody>
-                    <?php $i = 1;foreach($today_en as $en){ ?>
+                  <?php $i = 1; foreach($today_en as $en){ ?>
                   <tr>
                       <td>{{$i++}}</td>
                       <td>{{$en->enq_name}}</td>
@@ -42,7 +38,10 @@
             </div>
           </div>
         </div>
-</div>
+</section>>
+
+
+
 <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js" type="text/javascript"></script>
 <script src="bower_components/datatables.net/js/jquery.dataTables.min.js"></script>
 <script src="bower_components/datatables.net-bs/js/dataTables.bootstrap.min.js"></script>

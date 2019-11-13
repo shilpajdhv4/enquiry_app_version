@@ -1,5 +1,5 @@
 @extends('layouts.app')
-@section('title', 'Item-List')
+@section('title', 'Category-List')
 @section('content')
 <link href="css/sweetalert.css" rel="stylesheet">
 <link rel="stylesheet" href="bower_components/datatables.net-bs/css/dataTables.bootstrap.min.css">
