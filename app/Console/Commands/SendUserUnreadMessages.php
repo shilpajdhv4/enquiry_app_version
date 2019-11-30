@@ -55,7 +55,7 @@ class SendUserUnreadMessages extends Command
         $tokens = array();
         if(count($result) > 0 ){
             foreach ($result as $row) {
-                $today_notification = \App\Enquiry::where(['enq_emp_id'=>$row['id'],'enq_followup_date'=>$date])->count();
+                $today_notification = \App\Enquiry::where(['enq_emp_id'=>$row['id'],'enq_followup_date'=>$date])->where('order_status','!=',0)->count();
                 $tokens = array($row['token']);
                 $message = array("message" => "Today You Have a '.$today_notification.' Folloup's Server");
                 $this->send_notification($tokens,$message);

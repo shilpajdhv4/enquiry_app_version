@@ -200,7 +200,15 @@ if(Auth::guard('admin')->check()){
                         //} ?>
                         </div>
                         <?php } ?>
-                        
+                        <div class="form-group">
+                            <label for="company" class="col-sm-2 control-label">Order Status</label>
+                            <div class="col-sm-4">
+                                <select name="order_status" id="order_status" class="form-control select2" >
+                                    <option value="open" <?php if($enquiry_data->order_status == "open") echo "selected"; ?>>Open</option>
+                                    <option value="close" <?php if($enquiry_data->order_status == "close") echo "selected"; ?>>Close</option>
+                                </select>
+                            </div>
+                        </div>
                         <?php if(!in_array(6, $setting)) { ?>
                             <div id="h_lost">
                                 <?php $x=1;$k=0; $json_data = json_decode($enquiry_data->follow_up,true); 

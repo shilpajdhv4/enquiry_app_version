@@ -134,7 +134,8 @@ else if(Auth::guard('employee')->check()){
                                                 <th style="width:5px;"><b>Action</b></th>
                                                 <th><b>label Name</b></th>
                                                 <th><b>Data Type</b></th>  
-                                                <th><b>Requierd</b></th>
+                                                <th><b>Required</b></th>
+                                                <th><b>Show On Dashboard</b></th>
                                             </tr>
                                         </thead>
                                         <tbody id="h_lost1">
@@ -150,6 +151,11 @@ else if(Auth::guard('employee')->check()){
                                                         <option value="logtext">Log Text</option>
                                                         <option value="dropdown">Dropdown</option>
                                                     </select>
+                                                </td>
+                                                <td>
+                                                    <label>
+                                                        <input type="checkbox" class="minimal" name="parameter_field[1][]" >
+                                                    </label>
                                                 </td>
                                                 <td>
                                                     <label>

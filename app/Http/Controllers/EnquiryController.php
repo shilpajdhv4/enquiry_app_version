@@ -277,10 +277,13 @@ class EnquiryController extends Controller
             $id = $this->admin->rid;
             $enquiry_list = DB::table('enq_enquiries')
                      ->select('enq_enquiries.enq_id','enq_enquiries.enq_mobile_no','enq_enquiries.enq_name','enq_enquiries.enq_followup_date',
-                             'enq_enquiries.insert_date','enq_location.loc_name')
+                             'enq_enquiries.insert_date','enq_enquiries.order_status','enq_location.loc_name','tbl_employees.name','enq_order_status.or_status_name')
                      ->leftjoin('enq_location','enq_location.loc_id','enq_enquiries.lid')
-                     ->where(['enq_enquiries.is_active'=>0,'enq_user_id'=>$id])
+                     ->leftjoin('tbl_employees','tbl_employees.id','enq_enquiries.enq_emp_id')
+                     ->leftjoin('enq_order_status','enq_order_status.or_id','enq_enquiries.order_status')
+                     ->where(['enq_enquiries.is_active'=>0])
                      ->get();
+//            echo "<pre>";print_r($enquiry_list);exit;
 //            return view('enquiry.enquiry_list',['enquiry_list'=>$enquiry_list]);
         }
         else if(Auth::guard('employee')->check()){
@@ -290,10 +293,13 @@ class EnquiryController extends Controller
             $role = $this->employee->role;
             $enquiry_list = DB::table('enq_enquiries')
                      ->select('enq_enquiries.enq_id','enq_enquiries.enq_mobile_no','enq_enquiries.enq_name','enq_enquiries.enq_followup_date',
-                             'enq_enquiries.insert_date','enq_location.loc_name')
+                             'enq_enquiries.insert_date','enq_location.loc_name','enq_enquiries.order_status','enq_order_status.or_status_name')
                      ->leftjoin('enq_location','enq_location.loc_id','enq_enquiries.lid')
+                     ->leftjoin('enq_order_status','enq_order_status.or_id','enq_enquiries.order_status')
                      ->where(['enq_enquiries.is_active'=>0,'enq_enquiries.enq_user_id'=>$cid,'enq_enquiries.lid'=>$lid,'enq_enquiries.enq_emp_id'=>$emp_id])
+                     ->where('order_status','!=',0)
                      ->get();
+//            echo "<pre>";print_r($enquiry_list);exit;
 //            return view('enquiry_employee.enquiry_list',['enquiry_list'=>$enquiry_list]);
         }  
         return view('enquiry.enquiry_list',['enquiry_list'=>$enquiry_list]);
@@ -306,14 +312,16 @@ class EnquiryController extends Controller
             if(Auth::guard('admin')->check()){
                 $user_id = $this->admin->rid;
                 $enq_template = \App\EnquiryTemplate::select('temp_name','enq_temp_id')->where(['user_id'=>$user_id,'is_active'=>0])->get();
+                $enq_order = \App\EnquiryOrderStatus::select('or_id','or_status_name')->where(['user_id'=>$user_id,'is_active'=>0])->get();
 //                return view('enquiry.add_enquiry',['enq_template'=>$enq_template]);
             }else if( Auth::guard('employee')->check()){
                 $user_id = $this->employee->cid;
                 $lid = $this->employee->lid;
                 $enq_template = \App\EnquiryTemplate::select('temp_name','enq_temp_id')->where(['user_id'=>$user_id,'is_active'=>0])->whereRaw('FIND_IN_SET(?, loc_id)', [$lid])->get();
+                $enq_order = \App\EnquiryOrderStatus::select('or_id','or_status_name')->where(['user_id'=>$user_id,'is_active'=>0])->get();
 //                return view('enquiry_employee.add_enquiry',['enq_template'=>$enq_template]);
             }
-            return view('enquiry.add_enquiry',['enq_template'=>$enq_template]);
+            return view('enquiry.add_enquiry',['enq_template'=>$enq_template,'enq_order'=>$enq_order]);
 //            echo "<pre>";print_r($enq_template);exit;
             //,['city'=>$city,'brand'=>$brand,'custome_data'=>$custome_data,'product_data'=>$product_data,'employee_data'=>$employee_data,'enquiry_status'=>$enquiry_status,'last_entry'=>$last_entry,'source'=>$source,'status'=>$status,'category'=>$category]);
         }else{
@@ -430,8 +438,19 @@ class EnquiryController extends Controller
     
     public function deletEnquiry($id)
     {
+//        echo $id;exit;
         $query= \App\Enquiry::where('enq_id', $id)->update(['is_active' => 1]);
         Session::flash('alert-success', 'Deleted Successfully.');
+        return redirect('enquiry-list');
+    }
+    
+    public function updateAssignTo(Request $request){
+        $requestData = $request->all();
+//        echo "<pre>";print_r($requestData);exit;
+        $id = $requestData['enq_id'];
+        $lid = \App\Employee::select('lid')->where(['id'=>$id])->first();
+        //$enq = \App\Enquiry::findorfail($id);
+        \App\Enquiry::where(['enq_id'=>$id])->update(['enq_emp_id'=>$requestData['enq_user_id'],'lid'=>$lid->lid]);
         return redirect('enquiry-list');
     }
   

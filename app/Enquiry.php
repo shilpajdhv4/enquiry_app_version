@@ -17,7 +17,7 @@ class Enquiry extends Model
    //  public $timestamps=false;
      protected $fillable = [
         'enquiry_no','enq_mobile_no', 'enq_name', 'enq_followup_date','enq_template_id','enq_fields','enq_category' ,'enq_product' ,
-		'enq_product_id' ,'enq_user_id','enq_product_name','enq_notes','follow_up' ,'created_at','is_active','insert_date','enq_emp_id','lid'
+		'enq_product_id' ,'enq_user_id','enq_product_name','enq_notes','follow_up' ,'created_at','is_active','insert_date','enq_emp_id','lid','order_status'
 		//,'followup_date','emp_id','sync_flag','insert_date','active_inactive_status','cat_id','brand_id','cid','lid','sub_emp_id'
     ];
 

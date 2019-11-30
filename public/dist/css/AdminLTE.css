@@ -2292,16 +2292,30 @@ a:focus {
 .btn-default.hover {
   background-color: #e7e7e7;
 }
-.btn-primary {
+/*.btn-primary {
   background-color: #3c8dbc;
   border-color: #367fa9;
+}*/
+.btn-primary {
+  background-color: #00e6b0;
+  border-color: #00c999;
 }
+
 .btn-primary:hover,
 .btn-primary:active,
 .btn-primary.hover {
-  background-color: #367fa9;
+  background-color: #00e6b0;
 }
 .btn-success {
+  background-color: #00e6b0;
+  border-color: #00c999;
+}
+.btn-success:hover,
+.btn-success:active,
+.btn-success.hover {
+  background-color: #00e6b0;
+}
+/*.btn-success {
   background-color: #00a65a;
   border-color: #008d4c;
 }
@@ -2309,7 +2323,7 @@ a:focus {
 .btn-success:active,
 .btn-success.hover {
   background-color: #008d4c;
-}
+}*/
 .btn-info {
   background-color: #00c0ef;
   border-color: #00acd6;

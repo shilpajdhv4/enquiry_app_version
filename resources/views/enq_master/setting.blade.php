@@ -11,7 +11,7 @@
 
 <section class="content-header">
     <h1>
-        Show/Hide Form Field and Modules
+        To Hide Please Tick Mark The Following Checkbox
     </h1>
 </section>
 @if (Session::has('alert-success'))

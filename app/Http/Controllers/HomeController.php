@@ -31,13 +31,15 @@ class HomeController extends Controller
         $date = date('Y-m-d');
         $id = $this->admin->rid;
         $location = \App\EnquiryLocation::where(['user_id'=>$id,'is_active'=>0])->get();
+        $template = \App\EnquiryTemplate::select('enq_temp_id','temp_name','dashboard_field')->where(['user_id'=>$id,'is_active'=>0])->get();
         $today_en = DB::table('enq_enquiries')
               ->select('enquiry_no','enq_name','enq_mobile_no','enq_id')
               ->where('enq_followup_date','=',$date)
               ->where('enq_user_id','=',$id)
+              ->where('order_status','!=',0)
               ->where('is_active','=',0)
               ->get();
-        return view('admin.home',['today_en'=>$today_en,'location'=>$location]);
+        return view('admin.home',['today_en'=>$today_en,'location'=>$location,'template'=>$template]);
     }
     
     public function dashboard_enq_list()
@@ -49,6 +51,7 @@ class HomeController extends Controller
                         'enq_enquiries.insert_date','enq_location.loc_name')
                 ->leftjoin('enq_location','enq_location.loc_id','enq_enquiries.lid')
                 ->where(['enq_enquiries.is_active'=>0,'enq_user_id'=>$cid,'lid'=>$id])
+                ->where('order_status','!=',0)
                 ->get();
         return view('dashboard_enq_list',['enquiry_list' => $enquiry_list]);
     }
@@ -67,7 +70,8 @@ class HomeController extends Controller
         
         $today_en = DB::table('enq_enquiries')
               ->select('enquiry_no','enq_name','enq_mobile_no','enq_id')
-              ->where(['enq_followup_date'=>$date,'enq_user_id'=>$cid,'lid'=>$lid,'enq_emp_id'=>$emp_id,'is_active'=>0])
+              ->where(['enq_followup_date'=>$date,'enq_user_id'=>$cid,'lid'=>$lid,'enq_emp_id'=>$emp_id,'is_active'=>0,])
+              ->where('order_status','!=',0)
               ->get();
         return view('employee.home',['today_en'=>$today_en]);
     }

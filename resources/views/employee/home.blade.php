@@ -21,6 +21,7 @@
                     <th>Sr.No.</th>
                     <th>Cust. Name</th>
                     <th>Mob. No</th>
+                    <th>Action</th>
                   </tr>
                   </thead>
                   <tbody>
@@ -29,6 +30,7 @@
                       <td>{{$i++}}</td>
                       <td>{{$en->enq_name}}</td>
                       <td>{{$en->enq_mobile_no}}</td>
+                      <td><a href="{{  url('edit-enquiry?id='.$en->enq_id)}}"><span class="fa fa-edit"></span></a></td>
                   </tr>
                  <?php } ?>
                   </tbody>

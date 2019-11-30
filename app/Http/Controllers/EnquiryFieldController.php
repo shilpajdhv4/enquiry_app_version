@@ -149,6 +149,8 @@ class EnquiryFieldController extends Controller
                 $requestData['enq_fields'] = json_encode($requestData['parameter_field']);
             }
         }
+//        echo "<pre>";
+//        print_r($requestData);exit;
         $enq_temp->update($requestData);
         Session::flash('alert-success', 'Added Successfully.');
         return redirect('enq_templates');
@@ -156,7 +158,12 @@ class EnquiryFieldController extends Controller
     
     public function updateEnquiry(Request $request){
         $requestData = $request->all();
+        $imp_arr = array();
 //        echo "<pre>";print_r($requestData);exit;
+        
+        
+        $requestData['dashboard_field'] = json_encode($imp_arr);
+//        echo "<pre>";print_r($imp_arr);exit;
         $id = $requestData['enq_id'];
         $enq_temp = \App\EnquiryTemplate::where(['enq_temp_id'=>$id])->first();
         if(isset($requestData['loc_id'])){
@@ -166,6 +173,11 @@ class EnquiryFieldController extends Controller
             $requestData['enq_categories'] = json_encode($requestData['parameter_textbox']);
         }
         if(isset($requestData['parameter_field'])){
+            foreach($requestData['parameter_field'] as $f){
+               if(isset($f[3])){
+                 $imp_arr[$f[0]] = $f[3];
+               }
+            }
             $requestData['enq_fields'] = json_encode($requestData['parameter_field']);
         }
 //        echo "<pre>";print_r($requestData);exit;
@@ -191,18 +203,39 @@ class EnquiryFieldController extends Controller
     }
 
     public function getDropdown(){
-        return view('enq_master.category_master');
+        $id = $this->admin->rid;
+        $parent_cat = \App\EnquiryCategory::select('cat_name')->where(['user_id'=>$id,'is_active'=>0])->get();
+        $parent_arr = array();
+        foreach($parent_cat as $cat){
+            $parent_arr[] = $cat->cat_name;
+        }
+        return view('enq_master.category_master',['parent_arr'=>$parent_arr]);
     }
- 
+    
+    public function getPrevcat($id){
+        $id1 = $this->admin->rid;
+        $id = trim($id);
+        if (\App\EnquiryCategory::where(['user_id'=>$id1,'is_active'=>0,'cat_name'=>$id])->exists()) {
+            echo "true";
+        }else{
+            echo "Please Enter Correct Parent Category This Parent Category Not Exists !";
+        }
+//        $parent_cat = \App\EnquiryCategory::select('cat_name')->where(['user_id'=>$id,'is_active'=>0])->get();
+    }
+
     public function saveCategory(Request $request){
         $requestData = $request->all();
-       // echo "<pre>";print_r($requestData['parameter_detail']);exit;
+//        echo "<pre>";print_r($requestData['parameter_detail']);exit;
         foreach($requestData['parameter_detail'] as $row){
             $requestData['cat_name'] = $row['cat_name'];
             $requestData['cat_description'] = $row['cat_description'];
             if($row['parent_cat_name'] != ""){
-                $search = \App\EnquiryCategory::select('cat_id','cat_name')->where('cat_name', 'LIKE', '%'. $row['parent_cat_name']. '%')->first();
-                $requestData['parent_cat_id'] = $search->cat_id;
+                $search = \App\EnquiryCategory::select('cat_id','cat_name')->where('cat_name', 'LIKE', '%'. $row['parent_cat_name']. '%')->where(['user_id'=>$this->admin->rid,'is_active'=>0])->first();
+                if(isset($search->cat_id)){
+                    $requestData['parent_cat_id'] = $search->cat_id;
+                }else{
+                    $requestData['parent_cat_id'] = NULL;
+                }
             }else{
                 $requestData['parent_cat_id'] = NULL;
             }
@@ -216,9 +249,15 @@ class EnquiryFieldController extends Controller
     
     public function editCategory(){
         $id = $_GET['id'];
+        $id1 = $this->admin->rid;
+        $parent_cat = \App\EnquiryCategory::select('cat_name')->where(['user_id'=>$id1])->get();
+        $parent_arr = array();
+        foreach($parent_cat as $cat){
+            $parent_arr[] = $cat->cat_name;
+        }
         $enq_category = \App\EnquiryCategory::where(['cat_id'=>$id])->first(); 
         $product = \App\EnquiryProduct::select('prod_id','prod_name')->where(['cat_id'=>$id,'is_active'=>'0'])->get();
-        return view('enq_master.edit_enq_category',['enq_category'=>$enq_category,'product'=>$product]);
+        return view('enq_master.edit_enq_category',['enq_category'=>$enq_category,'product'=>$product,'parent_arr'=>$parent_arr]);
     }
 
     public function updateEnqCategory(Request $request){

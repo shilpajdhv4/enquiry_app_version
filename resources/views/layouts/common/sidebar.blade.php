@@ -83,6 +83,7 @@ $logo = "";
           <ul class="treeview-menu" <?php if(Request::is('enq_category') || Request::is('enq_location_list') || Request::is('enq_templates') || Request::is('user-list') || Request::is('enq-setting')){ ?> style="display:block" <?php } ?>>
             <?php if(!in_array(1, $setting)) { ?><li <?php if(Request::is('enq_category')) { ?>class="active" <?php } ?>><a href="{{url('enq_category')}}"><i class="fa fa-circle-o"></i>Add Category</a></li><?php } ?>
             <?php if(!in_array(5, $setting)) { ?><li <?php if(Request::is('enq_location_list')) { ?>class="active" <?php } ?>><a href="{{url('enq_location_list')}}"><i class="fa fa-circle-o"></i>Location</a></li><?php } ?>
+            <li <?php if(Request::is('enq_order_status_list')) { ?>class="active" <?php } ?>><a href="{{url('enq_order_status_list')}}"><i class="fa fa-circle-o"></i>Order Status</a>
             <li <?php if(Request::is('enq_templates')) { ?>class="active" <?php } ?>><a href="{{url('enq_templates')}}"><i class="fa fa-circle-o"></i>Enquiry Template</a></li>
             <?php if(!in_array(7, $setting)) { ?><li <?php if(Request::is('user-list')) { ?>class="active" <?php } ?>><a href="{{url('user-list')}}"><i class="fa fa-circle-o"></i>Employee Master</a><?php } ?>
             <li <?php if(Request::is('enq-setting')) { ?>class="active" <?php } ?>><a href="{{url('enq-setting')}}"><i class="fa fa-circle-o"></i>Settings</a>

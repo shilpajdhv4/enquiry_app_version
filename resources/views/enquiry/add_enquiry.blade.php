@@ -20,8 +20,8 @@ if(Auth::guard('admin')->check()){
         $id = Auth::guard('employee')->user()->cid;
         $client = \App\Admin::select('enq_setting')->where(['rid'=>$id])->first();
         $setting =array();
-        if(isset(Auth::guard('admin')->user()->enq_setting)){
-            $setting = json_decode(Auth::guard('admin')->user()->enq_setting,true);
+        if(isset($client->enq_setting)){
+            $setting = json_decode($client->enq_setting,true);
         }
 } ?>
 @if (Session::has('alert-success'))
@@ -69,7 +69,20 @@ if(Auth::guard('admin')->check()){
                         <div id="category_box" class="form-group"></div>
                         
                         <div id="product_box" class="form-group"></div>
-                        <?php } if(!in_array(6, $setting)) { ?>
+                        <?php } ?>
+                        <div class="form-group">
+                            <label for="company" class="col-sm-2 control-label">Order Status</label>
+                            <div class="col-sm-4">
+                                <select name="order_status" id="order_status" class="form-control select2" required >
+                                    <option value="">-- Select Order status --</option>
+                                    @foreach($enq_order as $order)
+                                    <option value="{{$order->or_id}}">{{$order->or_status_name}}</option>
+                                    @endforeach
+                                    <option value="0">Close</option>
+                                </select>
+                            </div>
+                        </div>
+                        <?php if(!in_array(6, $setting)) { ?>
                         <div id="h_lost">
                             <div class="form-group abc_count">
                                 <label for="userName" class="col-sm-1 control-label">1.</label>

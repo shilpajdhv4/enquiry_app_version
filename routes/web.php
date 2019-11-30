@@ -58,7 +58,7 @@ Route::post('add_enq_category','EnquiryFieldController@saveCategory');
 Route::get('edit_enq_category','EnquiryFieldController@editCategory');
 Route::post('update_enq_category','EnquiryFieldController@updateEnqCategory');
 Route::get('delete_enq_category/{id}','EnquiryFieldController@deleteEnqCategory');
-
+Route::get('get_prev_cat/{id}','EnquiryFieldController@getPrevcat');
 //Enquiry template
 Route::get('enq_templates','EnquiryFieldController@getTemplateList');
 Route::get('add_enq_template','EnquiryFieldController@getTemplate');
@@ -82,6 +82,7 @@ Route::post('add-enquiry','EnquiryController@saveEnquiry');
 Route::get('edit-enquiry','EnquiryController@editEnquiry');
 Route::put('update-enquiry/{id}','EnquiryController@updateEnquiry');
 Route::get('delete-enquiry/{id}','EnquiryController@deletEnquiry');
+Route::post('update_assign_to','EnquiryController@updateAssignTo');
 //Route::get('mobile-validate/{id}','EnquiryController@validateMobile');
 //Employee Enquiry
 Route::get('enq_temp_value1/{id}','EnquiryController@getEnqfield1');
@@ -107,3 +108,11 @@ Route::post('enq-setting','EnquiryFieldController@saveSetting');
 //client data
 Route::get('client_data','ClientController@getClientData');
 Route::get('active_link/{id}/{val}','ClientController@getActivate');
+
+//Order Status
+Route::get('enq_order_status_list','EnquiryOrderStatusController@listOrderstatus');
+Route::get('enq_order_status_add','EnquiryOrderStatusController@addOrderStatus');
+Route::post('enq_order_status_save','EnquiryOrderStatusController@saveOrderStatus');
+Route::get('enq-order-status-edit','EnquiryOrderStatusController@editOrderStatus');
+Route::post('enq_order_status_update','EnquiryOrderStatusController@updateOrderStatus');
+Route::get('enq-order_status-delete/{id}','EnquiryOrderStatusController@deleteOrderStatus');

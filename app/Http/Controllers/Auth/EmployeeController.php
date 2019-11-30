@@ -123,7 +123,7 @@ class EmployeeController extends Controller
 //            $response->withCookie(cookie('password', $request->password , $minutes));
             return redirect('add-enquiry');
         }
-        return back()->withErrors(['email' => 'Email or password are wrong.']);
+        return redirect('employee-login')->withErrors(['email' => 'Email or password are wrong.']);
     }
     
     

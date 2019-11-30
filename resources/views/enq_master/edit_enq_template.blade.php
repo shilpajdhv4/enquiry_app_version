@@ -170,19 +170,22 @@ $ii = $jj = 1;$m = 0;
                          <div class="form-group">
                             <h4><label for="userName" class="col-sm-3 control-label" style="text-align:center;">Add Fields</label></h4>
                         </div>
-                        <?php if(!empty($enq_field)){ ?>
+                        <?php if(!empty($enq_field)){ $l = 0;
+//                        echo "<pre>";print_r($enq_field);exit;
+                        ?>
                         <table class="table table-striped table-bordered" border="0">
                             <thead>
                                 <tr>
                                     <th style="width:5px;"><b>Action</b></th>
                                     <th><b>label Name</b></th>
                                     <th><b>Data Type</b></th>  
-                                    <th><b>Requierd</b></th>
+                                    <th><b>Required</b></th>
+                                    <th><b>Show On Dashboard</b></th>
                                 </tr>
                             </thead>
                             <tbody id="h_lost1">
                                 @foreach($enq_field as $field)
-                                <tr class="input_fields_wrap">
+                                <tr class="input_fields_wrap delparam_{{$l}}">
                                     <td style="width:0.5%;"><i class="fa fa-plus-circle add_field_button" style="color: #0c8a54;font-size: x-large;"></i> <i class="fa fa-minus-circle remove_field" style="color: red;font-size: x-large;"></i></td>
                                     <td>
                                         <input type="text" class="form-control" placeholder="Label Name" value="{{$field[0]}}" name="parameter_field[{{$m}}][]" id="parameter_textbox[1][]"  required >
@@ -200,37 +203,43 @@ $ii = $jj = 1;$m = 0;
                                             <input type="checkbox" class="minimal" name="parameter_field[{{$m}}][]" <?php if(isset($field[2])) if($field[2] == "on") echo "checked"; ?>>
                                         </label>
                                     </td>
+                                    <td>
+                                        <label>
+                                            <input type="checkbox" class="minimal" name="parameter_field[{{$m}}][]" <?php if(isset($field[3])) if($field[3] == "on") echo "checked"; ?>>
+                                        </label>
+                                    </td>
                                 </tr>
                                 <?php
                                     if($field[1] == "dropdown"){ 
                                         if(isset($field['product'])){
                                         foreach($field['product'] as $p){
                                         ?>
-                                        <tr class="subprocess_row delparam" >
+                                        <tr class="subprocess_row delparam_{{$l}}" >
                                         <td style="width:2%;"></td>
                                         <td><i class="fa fa-plus-circle add_field_button12" style="color: blue;font-size: x-large;" id="parameter_field[{{$m}}][product][]"></i><i class="fa fa-minus-circle remove_field1" style="color: red;font-size: x-large;"></i></td>
                                         <td><input type="text" name="parameter_field[{{$m}}][product][]" id="parameter_field[{{$m}}][product][]" class="form-control checkblank" rows="1" value="{{$p}}" aria-required="true"></td></tr>
                                         <?php } }
                                 }                                
-                                $jj++;$m++;?>
+                                $jj++;$m++; $l++;?>
                             @endforeach
                             </tbody>
                         </table>  
-                        <?php } else { ?>
+                        <?php  } else { ?>
                             <table class="table table-striped table-bordered" border="0">
                                         <thead>
                                             <tr>
                                                 <th style="width:5px;"><b>Action</b></th>
                                                 <th><b>label Name</b></th>
                                                 <th><b>Data Type</b></th>  
-                                                <th><b>Requierd</b></th>
+                                                <th><b>Required</b></th>
+                                                <th><b>Show On Dashboard</b></th>
                                             </tr>
                                         </thead>
                                         <tbody id="h_lost1">
                                             <tr class="input_fields_wrap">
                                                 <td style="width:0.5%;"><i class="fa fa-plus-circle add_field_button" style="color: #0c8a54;font-size: x-large;"></i></td>
                                                 <td>
-                                                    <input type="text" class="form-control" placeholder="Label Name" value="" name="parameter_field[1][]" id="parameter_textbox[1][]"  required >
+                                                    <input type="text" class="form-control" placeholder="Label Name" value="" name="parameter_field[1][]" id="parameter_textbox[1][]"   >
                                                 </td>
                                                 <td>
                                                     <select class="form-control select2 prod_drop" style="width: 100%;" name="parameter_field[1][]" id="parameter_field[1]">
@@ -239,6 +248,11 @@ $ii = $jj = 1;$m = 0;
                                                         <option value="logtext">Log Text</option>
                                                         <option value="dropdown">Dropdown</option>
                                                     </select>
+                                                </td>
+                                                <td>
+                                                    <label>
+                                                        <input type="checkbox" class="minimal" name="parameter_field[1][]" >
+                                                    </label>
                                                 </td>
                                                 <td>
                                                     <label>
@@ -284,16 +298,17 @@ $(document).ready(function () {
         
         
         //Product/Text Filed Or Drop Down
-        var i = 2;
-        var l=1;
+        var i = $(".add_field_button").length;
+        var l=$(".input_fields_wrap").length;//1;
        $(document).on('click','.add_field_button',function(){
+//           alert();
         var v = $(this).parents("td").prevAll(".parameter").eq(1).val();
         i++; 
         l++;
-        
+       // alert(i);
         $("#h_lost1").append('<tr class="input_fields_wrap delparam_'+l+'">\n\
             <td style="width:2%;"><i class="fa fa-plus-circle add_field_button" style="color: #0c8a54;font-size: x-large;"></i> <i class="fa fa-minus-circle remove_field" style="color: red;font-size: x-large;"></i></td><td><input type="text" class="form-control" placeholder="Label Name" value="" name="parameter_field['+i+'][]"  required ></td>\n\
-            <td><select class="form-control select2 prod_drop" style="width: 100%;" name="parameter_field['+i+'][]" id="parameter_field['+i+']"><option value="text">Text</option><option value="number">Number</option><option value="logtext">Log Text</option><option value="dropdown">Dropdown</option></select></td><td><label><input type="checkbox" class="minimal" name="parameter_field['+i+'][]" ></label></td></tr>')
+            <td><select class="form-control select2 prod_drop" style="width: 100%;" name="parameter_field['+i+'][]" id="parameter_field['+i+']"><option value="text">Text</option><option value="number">Number</option><option value="logtext">Log Text</option><option value="dropdown">Dropdown</option></select></td><td><label><input type="checkbox" class="minimal" name="parameter_field['+i+'][]" ></label></td><td><label><input type="checkbox" class="minimal" name="parameter_field['+i+'][]" ></label></td></tr>')
 
             $('select').select2();
             $('.datepicker-autoclose').datepicker();
@@ -332,10 +347,14 @@ $(document).ready(function () {
     
 
 
-    $("#h_lost1").on('click','.remove_field',function(){
+//        $(document).on('click','.remove_field',function(){
+        $("#h_lost1").on('click','.remove_field',function(){
            var classname = $(this). closest('tr').attr('class');
+//           alert(classname);
            var ret = classname.split(" ");
+//           alert(ret);
            var ret1 = ret[1].split("_");
+//           alert(ret1);
             $('.delparam_'+ret1[1]).remove();
         });
         $("#h_lost1").on('click','.remove_field1',function(){

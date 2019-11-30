@@ -8,7 +8,22 @@
         }
     }
 </style>
+<link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+<script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+<script>
+    jq162 = jQuery.noConflict( true );
+    var yourArray = yourArray3 = [];
+    yourArray3 = <?php echo json_encode($parent_arr); ?>;
+    console.log(yourArray3);
+        
+        function myFunction() {
+            jq162( ".automplete-1" ).autocomplete({
+               source: yourArray3
+            });
+        }
 
+</script>
 <section class="content-header">
     <h1>
         Edit Category
@@ -47,7 +62,7 @@
                         <div class="form-group">
                             <label for="userName" class="col-sm-4 control-label">Parent Category</label>
                             <div class="col-sm-8">
-                                <textarea class="form-control"  placeholder="Parent Category"  name="parent_cat_name"  >{{$enq_category->parent_cat_name}}</textarea>
+                                <input type="text" class="form-control automplete-1" onkeypress="myFunction()"  placeholder="Parent Category"  name="parent_cat_name" value="{{$enq_category->parent_cat_name}}" />
                             </div>
                         </div>
                         <div class="inc">
